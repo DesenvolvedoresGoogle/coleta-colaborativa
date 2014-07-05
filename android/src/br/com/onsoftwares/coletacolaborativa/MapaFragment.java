@@ -22,7 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
  public class MapaFragment extends Fragment {
 
-    	private GoogleMap map;
+    	public GoogleMap map;
     	private Context context;
     	private Marker myLocation;
     	
