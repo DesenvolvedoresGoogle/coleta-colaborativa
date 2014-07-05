@@ -1,9 +1,25 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<meta charset="UTF-8">
+		<title>Coleta Colavorativa</title>
+		<link rel="stylesheet" href="css/index.css">
+		<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBhp-XEVy9T9yaht07LCj6SdwaztO0tVmc&sensor=true"></script>
+		<script src="js/index.js"></script>
 	</head>
-	<body>
-		ColetaColaborativa
+	<body onload="initialize()">
+		<!-- navbar begin -->
+		<div>
+			<ul>
+				<li><a href="#">Mapa</a></li>
+				<li><a href="#">Estatísticas</a></li>
+			</ul>
+		</div>
+		<!-- navbar end -->
+
+		<!-- content begin -->
+		<div id="mapa_coleta">
+		</div>
+		<!-- content end -->
 	</body>
 </html>
