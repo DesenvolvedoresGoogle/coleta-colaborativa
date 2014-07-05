@@ -2,6 +2,8 @@
 
 from django.db import models
 
+from usuario.models import Usuario
+
 '''
 Model que mapeia um Tipo de Coleta.
 '''
@@ -23,6 +25,9 @@ class Ponto(models.Model):
     longitude = models.DecimalField('Longitude', max_digits=10, decimal_places=8)
     ponto_privado = models.BooleanField('Ponto Privado', default=False)
     descricao = models.TextField('Descrição')
+
+    #Associação entre ponto e usuário que cadastrou o ponto.
+    usuario = models.ForeignKey(Usuario)
 
     class Meta:
         verbose_name = u'Ponto'
