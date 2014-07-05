@@ -45,6 +45,9 @@ class Local(models.Model):
     #Chave para o model Tipo.
     tipo = models.ForeignKey(Tipo)
 
+    #Chave para o model Ponto.
+    ponto = models.ForeignKey(Ponto)
+
     class Meta:
         verbose_name = u'Local de Coleta'
         verbose_name_plural = u'Locais de Coleta'

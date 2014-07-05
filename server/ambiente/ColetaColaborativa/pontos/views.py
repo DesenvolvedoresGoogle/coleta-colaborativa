@@ -39,15 +39,23 @@ def novo_ponto(request):
 
 def novo_local(request):
     #TRATAR DADOS VINDOS DO REQUEST.
-    dados = create_json_novo_ponto()
+    dados = create_json_novo_local()
 
+    #Recupera a referencia do tipo no banco de dados.
     try:
         tipo = Tipo.objects.get(id=dados['tipo'])
     except Tipo.DoesNotExist:
         return HttpResponse('ERRO')    
 
+    #Recupera a referencia do ponto no banco de dados.
+    try:
+        ponto = Ponto.objects.get(id=dados['ponto'])
+    except Ponto.DoesNotExist:
+        return HttpResponse('ERRO')     
+
     local = Local()
     local.tipo = tipo
+    local.ponto = ponto
     local.observacoes = dados['observacoes']
     local.save()
 
@@ -71,6 +79,7 @@ def create_json_novo_local():
     dados_local = {
         'tipo' : 1,
         'observacoes' : 'Observações',
+        'ponto' : 1
     }
 
     return dados_local
