@@ -2,8 +2,18 @@
 
 from django.db import models
 
+'''
+Model que mapeia um Tipo de Coleta.
+'''
 class Tipo(models.Model):
     nome = models.CharField('Tipo de Coleta', max_length=200)
+
+    class Meta:
+        verbose_name = u'Tipo'
+        verbose_name_plural = u'Tipos'
+
+    def __unicode__(self):
+        return self.nome
 
 '''
 Model que mapeia um Ponto de Coleta.
