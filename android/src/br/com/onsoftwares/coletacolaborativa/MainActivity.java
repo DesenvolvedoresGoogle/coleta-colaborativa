@@ -1,19 +1,21 @@
 package br.com.onsoftwares.coletacolaborativa;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -28,7 +30,6 @@ public class MainActivity extends ActionBarActivity {
                     .commit();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -50,11 +51,10 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
     
-    public static class MapaFragment extends Fragment {
+   /* public static class MapaFragment extends Fragment {
 
     	private GoogleMap map;
-    	//private LocationServer locationServer;	
-    	
+    	private LocationServer locationServer;	
     	
     	@Override
     	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,13 +63,13 @@ public class MainActivity extends ActionBarActivity {
     		this.map = ((SupportMapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
     		this.map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
     		
-    		//Marker myLocation = this.map.addMarker(new MarkerOptions().
-    			//	position(new LatLng(this.locationServer.getLatitude(), this.locationServer.getLongitude()))
-    				//.title("Minha Localização")
-    				//.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
+    		Marker myLocation = this.map.addMarker(new MarkerOptions().
+    				position(new LatLng(this.locationServer.getLatitude(), this.locationServer.getLongitude()))
+    				.title("Minha Localização")
+    				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
     				
     		return rootView;
     	}
-    }
+    }*/
 
 }
