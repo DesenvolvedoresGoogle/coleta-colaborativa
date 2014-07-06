@@ -23,9 +23,9 @@
     				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       					<ul class="nav navbar-nav">
         					<li class="active"><a href="">Home</a></li>
-                            <li><a href="view/no_mapa/">Uso no Mapa</a></li>
-        					<li><a href="#">Estatística</a></li>
-        					<li><a href="view/pontos/">Novo Ponto</a></li>
+			                        <li><a href="{% url 'no_mapa' %}">Uso no Mapa</a></li>
+        					<li><a href="{% url 'estatistica' %}">Estatística</a></li>
+        					<li><a href="{% url 'pontos' %}">Novo Ponto</a></li>
       					</ul>
       					<ul class="nav navbar-nav navbar-right">
 						<li>

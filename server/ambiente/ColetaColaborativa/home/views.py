@@ -38,14 +38,7 @@ def estatistica(request):
             cor = getCorHexadecimal()
             item = ItemGraficoPizza(valor = len(estatisticas), color = cor, highlight = cor, label = tipo.nome)
             dadosConsultados.append(item) 
-  
-   # pontos = Ponto.objects.all()
-   # dadosPontosMaisUtilizados = []
-  #  for ponto in pontos:
- #       estatisticas = Estatistica.objects.filter(ponto__id = ponto.id, tipo = 1)
-#       if len(estatisticas) > 0:
-            
- 
+   
     return render(request, 'home/estatistica.html', {'dadosUtilizacao': dadosUtilizacao, 'dadosConsultados': dadosConsultados})
 
 def getCorHexadecimal():
@@ -60,3 +53,15 @@ class ItemGraficoPizza:
         self.color = color
         self.highlight = highlight
         self.label = label
+
+class ItemGraficoBarra:
+    descricao = ''
+
+    def __init__(self, descricao):
+        self.descricao = descricao
+
+class ValorItemGraficoBarra:
+    valor = 0
+
+    def __init__(self, valor):
+        self.valor = valor

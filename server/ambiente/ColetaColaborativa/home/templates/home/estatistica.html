@@ -53,26 +53,16 @@
 			<div class="col-sm-6 col-md-6">
 				<div class="panel panel-default" id="form_ponto">
 					<div class="panel-heading">Tipos de Resíduos Mais Descartados</div>
-			  		<div class="panel-body">			   
-						<canvas id="grafico_utilizacao_tipos" width="200px" height="200px"></canvas>
+			  		<div class="panel-body" style="text-align: center">			   
+						<canvas id="grafico_utilizacao_tipos" width="300px" height="300px"></canvas>
 					</div>
 				</div>
 			</div>
 			<div class="col-sm-6 col-md-6">
 				<div class="panel panel-default" id="form_ponto">
 					<div class="panel-heading">Tipos de Resíduos Mais Consultados</div>
-			  		<div class="panel-body">			   
-						<canvas id="grafico_consulta_tipos" width="200px" height="200px"></canvas>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-12 col-md-12">
-				<div class="panel panel-default" id="form_ponto">
-					<div class="panel-heading">Pontos de Coleta Mais Utilizados</div>
-			  		<div class="panel-body">			   
-						<canvas id="grafico_pontos_mais_utilizados" width="200px" height="200px"></canvas>
+			  		<div class="panel-body" style="text-align:center">
+						<canvas id="grafico_consulta_tipos" width="300px" height="300px"></canvas>
 					</div>
 				</div>
 			</div>
@@ -103,31 +93,6 @@
             {% endfor %}
    	    var graficoUtilizacao = new Chart(ctx).Pie(dadosConsultas);
 
-
-	    var ctx = $("#grafico_pontos_mais_utilizados").get(0).getContext("2d");
-var data = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-        {
-            label: "My First dataset",
-            fillColor: "rgba(220,220,220,0.5)",
-            strokeColor: "rgba(220,220,220,0.8)",
-            highlightFill: "rgba(220,220,220,0.75)",
-            highlightStroke: "rgba(220,220,220,1)",
-            data: [65, 59, 80, 81, 56, 55, 40]
-        },
-        {
-            label: "My Second dataset",
-            fillColor: "rgba(151,187,205,0.5)",
-            strokeColor: "rgba(151,187,205,0.8)",
-            highlightFill: "rgba(151,187,205,0.75)",
-            highlightStroke: "rgba(151,187,205,1)",
-            data: [28, 48, 40, 19, 86, 27, 90]
-        }
-    ]
-};
-
-var myBarChart = new Chart(ctx).Bar(data, options);
         });
 
         function exibir_mensagem(id) {
