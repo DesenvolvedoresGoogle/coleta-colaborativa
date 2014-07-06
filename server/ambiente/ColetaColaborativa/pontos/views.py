@@ -166,7 +166,32 @@ def consulta_pontos_proximos(request):
 
     return HttpResponse(json.dumps(response))
 
+'''
+Método que confirma um descarte e gera uma estatistica.
+'''
+@csrf_exempt
+def confirmar_descarte(request):
+    tipo_descarte = request.POST['tipo_id']
+    id_ponto = request.POST['ponto_id']
+    latitude = request.POST['latitude']
+    longitude = request.POST['longitude']
 
+    tipo = Tipo.objects.get(id=tipo_descarte)
+    ponto = Ponto.objects.get(id=id_ponto)
+
+    estatistica = Estatistica()
+    estatistica.ponto = ponto
+    estatistica.tipo_descarte = tipo
+    estatistica.latitude = latitude
+    estatistica.longitude = longitude
+    estatistica.tipo = 2
+    estatistica.save()
+
+    response = {
+        'response' : 1
+    }
+
+    return response
 
 
 def create_json_novo_ponto():
