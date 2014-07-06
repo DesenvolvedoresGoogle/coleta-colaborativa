@@ -1,5 +1,6 @@
 #coding:utf-8
 from django.shortcuts import render
+from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from home import views as views_home
@@ -50,5 +51,5 @@ def processa_post_novo(request):
         tipo_banco = Tipo.objects.get(id=int(tipo))
         ponto.tipos.add(tipo_banco)
 
-    return render(request, 'home/index.html', {})
+    return redirect('/')
 

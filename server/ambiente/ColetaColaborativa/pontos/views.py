@@ -15,35 +15,26 @@ import haversine
 # Create your views here.
 @csrf_exempt
 def novo_ponto(request):
-    #TRATAR DADOS VINDOS DO REQUEST.
-
-    dados = create_json_novo_ponto()
-
-    #Verifica se o usuário já existe.
-    try:
-        usuario = Usuario.objects.get(id_login=dados['id'])
-    except Usuario.DoesNotExist: # Se o usuário não existir, um novo é criado.
-        usuario = Usuario()
-        usuario.nome = dados['nome']
-        usuario.id_login = dados['id']
-        usuario.url = dados['url']
-        usuario.email = dados['email']
-        usuario.save()
+    dados = request.POST
 
     #Cria um ponto com os dados vindo da tela e associação com o usuario.
     ponto = Ponto()
     ponto.latitude = dados['latitude']
     ponto.longitude = dados['longitude']
     ponto.descricao = dados['descricao']
-    ponto.usuario = usuario
+    
+    ponto.save()
 
-    #ponto.save()
+    for tipo in dados['tipos']:
+        if tipo.isdigit() == True:
+            tipo_banco = Tipo.objects.get(id=tipo)
+            ponto.tipos.add(tipo_banco)
 
-    #for tipo in dados['tipos']:
-    #    tipo_banco = Tipo.objects.get(id=tipo['id'])
-    #    ponto.tipos.add(tipo_banco)
+    response = {
+        'response' : 1,
+    }
 
-    return HttpResponse('Hello Novo Ponto')
+    return HttpResponse(json.dumps(response))
 
 '''
 Método que responde com um JSON com todos os Tipos de Descartes disponíveis.

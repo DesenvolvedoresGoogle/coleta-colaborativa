@@ -44,7 +44,7 @@ class Ponto(models.Model):
     descricao = models.TextField('Descrição')
 
     #Associação entre ponto e usuário que cadastrou o ponto.
-    usuario = models.ForeignKey(Usuario)
+    usuario = models.ForeignKey(Usuario, null=True, blank=True, default=None)
     tipos = models.ManyToManyField(Tipo)
 
     class Meta:
@@ -61,8 +61,10 @@ class Ponto(models.Model):
             'longitude' : str(self.longitude),
             'ponto_privado' : self.ponto_privado,
             'descricao' : self.descricao,
-            'usuario' : self.usuario.get_dicionario(),
         }
+
+        if self.usuario != None:
+            retorno['usuario'] = self.usuario.get_dicionario()
 
         retorno['tipos'] = []
         for tipo in self.tipos.iterator():
