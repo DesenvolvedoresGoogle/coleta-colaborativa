@@ -16,3 +16,11 @@ class Usuario(models.Model):
 
     def __unicode__(self):
         return self.nome + '-' + self.telefone
+
+    def get_dicionario(self):
+        retorno = {
+            'nome' : self.nome,
+            'email' : self.email
+        }
+
+        return retorno

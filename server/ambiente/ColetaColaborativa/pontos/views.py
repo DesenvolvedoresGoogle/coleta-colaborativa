@@ -1,4 +1,6 @@
 #coding:utf-8
+from django.views.decorators.csrf import csrf_exempt
+
 from django.shortcuts import render
 from django.http import HttpResponse
 
@@ -10,6 +12,7 @@ from pontos.models import Tipo
 import json
 
 # Create your views here.
+@csrf_exempt
 def novo_ponto(request):
     #TRATAR DADOS VINDOS DO REQUEST.
 
@@ -60,6 +63,36 @@ def novo_local(request):
     local.save()
 
     return HttpResponse('Hello Novo Local') 
+
+@csrf_exempt
+def consulta_todos_tipos(request):
+    tipos = Tipo.objects.all()
+    lista_dicionario_tipos = []
+
+    for tipo in tipos:
+        lista_dicionario_tipos.append(tipo.get_dicionario())
+
+    response = {
+        'response' : 1,
+        'tipos' : lista_dicionario_tipos
+    }
+
+    return HttpResponse(json.dumps(response))
+
+@csrf_exempt
+def consulta_todos_pontos(request):
+    pontos = Ponto.objects.all()
+    lista_dicionario_pontos = []
+
+    for ponto in pontos:
+        lista_dicionario_pontos.append(ponto.get_dicionario())
+
+    response = {
+        'response' : 1,
+        'pontos' : lista_dicionario_pontos
+    }
+
+    return HttpResponse(json.dumps(response))
 
 
 def create_json_novo_ponto():

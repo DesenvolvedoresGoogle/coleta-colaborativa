@@ -17,6 +17,14 @@ class Tipo(models.Model):
     def __unicode__(self):
         return self.nome
 
+    def get_dicionario(self):
+        retorno = {
+            'nome' : self.nome,
+            'id' : self.id
+        }
+
+        return retorno
+
 '''
 Model que mapeia um Ponto de Coleta.
 '''
@@ -35,6 +43,17 @@ class Ponto(models.Model):
 
     def __unicode__(self):
         return self.descricao[0:50] + '...'
+
+    def get_dicionario(self):
+        retorno = {
+            'latitude' : str(self.latitude),
+            'longitude' : str(self.longitude),
+            'ponto_privado' : self.ponto_privado,
+            'descricao' : self.descricao,
+            'usuario' : self.usuario.get_dicionario()
+        }
+
+        return retorno
 
 '''
 Model que mapeia um Local de Coleta.
