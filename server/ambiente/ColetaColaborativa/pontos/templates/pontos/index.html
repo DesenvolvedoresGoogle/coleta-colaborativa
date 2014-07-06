@@ -23,13 +23,14 @@
 
     				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       					<ul class="nav navbar-nav">
-        					<li><a href="#">Home</a></li>
-        					<li><a href="#">Estatística</a></li>
-        					<li class="active"><a href="view/pontos/">Novo Ponto</a></li>
+        					<li><a href="{% url 'index' %}">Home</a></li>
+						<li><a href="{% url 'no_mapa' %}">Uso no Mapa</a></li>
+        					<li><a href="{% url 'estatistica' %}">Estatística</a></li>
+        					<li class="active"><a href="{% url 'pontos' %}">Novo Ponto</a></li>
       					</ul>
       					<ul class="nav navbar-nav navbar-right">
 						<li>
-							<form method='POST'>
+							<form method="POST">
 								<span id="signinButton">
 									<button class="g-signin"
 										data-scope="https://www.googleapis.com/auth/plus.login"
@@ -57,38 +58,39 @@
 			  <div class="panel-heading">Dados do Ponto</div>
 			  <div class="panel-body">			   
 				<form name="ponto" method="POST">
-					<div>
+					<div class="input-group">
 						<label for="latitude">Latitude:</label>
-						<input name="latitude" id="lat" type="text" />
+						<input name="latitude" id="lat" type="text" class="form-control" />
 					</div>
-					<div>
+					<div class="input-group">
 						<label for="longitude">Longitude:</label>
-						<input name="longitude" id="long" type="text" />
+						<input name="longitude" id="long" type="text" class="form-control" />
 					</div>
-					<div>
-						<label for="tipos">Tipos:</label>
-						<select class="multiselect" multiple="multiple" name="tipos">
+					<div class="input-group">
+						<label for="tipos">Tipos:</label><br />
+						<select class="multiselect form-control" multiple="multiple" name="tipos">
 							{% for tipo in tipos %}
 								<option value="{{tipo.id}}">{{tipo.nome}}</option>
 							{% endfor %}
 						</select>
 					</div>
-					<div>
+					<div class="input-group">
 						<label for="descricao">Descrição:</label>
-						<input name="descricao" type="textarea" />
+						<input name="descricao" type="textarea" class="form-control" />
 					</div>
-					<div>
+					<div class="input-group">
 						<input name="ponto_privado" type="checkbox" />
 						<label for="ponto_privado">Corporativo/ONG</label>
 					</div>
-					<div>
+					<div class="input-group">
 						<label for="email">E-mail:</label>
-						<input name="email" type="textarea" />
+						<input name="email" type="textarea" class="form-control" />
 					</div>
 					<input type="hidden" id="id" name="id" />
 					<input type="hidden" id="nome" name="nome" />
 					<input type="hidden" id="url" name="url" />
-					<input type="submit" value="Enviar" />
+
+					<button type="button" class="btn btn-primary">Enviar</button>
 				</form>
 				<!-- formulário fim -->
 			  </div>

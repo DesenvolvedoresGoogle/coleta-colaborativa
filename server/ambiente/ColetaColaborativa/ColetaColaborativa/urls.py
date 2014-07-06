@@ -23,5 +23,6 @@ urlpatterns = patterns('',
     url(r'^$', views_home.index, name='index'),
 
     url(r'view/pontos/', views_site.index, name='pontos'),
-    url(r'view/no_mapa/', views_site.no_mapa, name='no_mapa')
+    url(r'view/no_mapa/', views_home.no_mapa, name='no_mapa'),
+    url(r'view/estatistica/', views_home.estatistica, name='estatistica')
 )

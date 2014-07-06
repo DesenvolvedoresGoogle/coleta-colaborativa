@@ -30,3 +30,12 @@ div#form_ponto {
 	height: 100%;
 	float: right;
 }
+
+div.input-group {
+	margin-top: 1%;
+}
+
+div.input-group input,
+div.input-group select {
+	width: 100% !important;
+}

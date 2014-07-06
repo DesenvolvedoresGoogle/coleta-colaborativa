@@ -6,7 +6,6 @@ from home import views as views_home
 
 from usuario.models import Usuario
 from pontos.models import Ponto, Tipo
-from pontos.models import Estatistica
 
 @csrf_exempt
 def index(request):
@@ -53,7 +52,3 @@ def processa_post_novo(request):
 
     return render(request, 'home/index.html', {})
 
-def no_mapa(request):
-    estatisticas = Estatistica.objects.all()
-
-    return render(request, 'home/no_mapa.html', {'estatisticas': estatisticas})

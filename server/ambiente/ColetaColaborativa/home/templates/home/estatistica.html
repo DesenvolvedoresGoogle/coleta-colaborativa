@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Coleta Colaborativa</title>
+        <link rel="stylesheet" href="{{STATIC_URL}}css/index.css">
+        <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-theme.min.css">
+    </head>
+    <body>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">ColetaColaborativa</a>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a href="{% url 'index' %}">Home</a></li>
+                            <li><a href="view/no_mapa/">Uso no Mapa</a></li>
+                            <li class="active"><a href="view/estatistica/">Estatística</a></li>
+                            <li><a href="{% url 'pontos' %}">Novo Ponto</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <form method='POST'>
+                                <span id="signinButton">
+                                    <button class="g-signin"
+                                        data-scope="https://www.googleapis.com/auth/plus.login"
+                                        data-clientid="1054618264919-m26qm6qvk5cdh1o2pha90dnt2uosuda6.apps.googleusercontent.com"
+                                        data-callback="signinCallback"
+                                        data-theme="dark"
+                                        data-cookiepolicy="single_host_origin"
+                                        data-requestvisibleactions="http://schemas.google.com/AddActivity"
+                                        data-width="wide">
+                                    </button>
+                                </span>
+                            </form>
+                        </li>
+                        </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div id="container">
+		<div class="row">
+			<div class="col-sm-6 col-md-6">
+				<div class="panel panel-default" id="form_ponto">
+					<div class="panel-heading">Tipos de Resíduos Mais Descartados</div>
+			  		<div class="panel-body">			   
+						<canvas id="grafico_utilizacao_tipos" width="200px" height="200px"></canvas>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-6">
+				<div class="panel panel-default" id="form_ponto">
+					<div class="panel-heading">Tipos de Resíduos Mais Consultados</div>
+			  		<div class="panel-body">			   
+						<canvas id="grafico_consulta_tipos" width="200px" height="200px"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12 col-md-12">
+				<div class="panel panel-default" id="form_ponto">
+					<div class="panel-heading">Pontos de Coleta Mais Utilizados</div>
+			  		<div class="panel-body">			   
+						<canvas id="grafico_pontos_mais_utilizados" width="200px" height="200px"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+        </div>
+    </body>
+
+
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBhp-XEVy9T9yaht07LCj6SdwaztO0tVmc&sensor=true"></script>
+    <script src='http://code.jquery.com/jquery-2.1.1.min.js'></script>
+    <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+    <script src="{{STATIC_URL}}js/Chart.min.js"></script>
+    <script src="{{STATIC_URL}}js/login_api.js"></script>
+    <script>
+        $(document).ready( function() {
+	    // Gráfico de utilização por tipos.
+	    var ctx = $("#grafico_utilizacao_tipos").get(0).getContext("2d");
+	    dadosUtilizados = [];
+	    {% for item in dadosUtilizacao %}
+	        dadosUtilizados.push({ value: parseInt('{{item.valor}}'), color: '{{item.color}}', highlight: '{{item.highlight}}', label: '{{item.label}}' });
+            {% endfor %}
+   	    var graficoUtilizacao = new Chart(ctx).Pie(dadosUtilizados);
+
+	    var ctx = $("#grafico_consulta_tipos").get(0).getContext("2d");
+	    dadosConsultas = [];
+	    {% for item in dadosConsultados %}
+	        dadosConsultas.push({ value: parseInt('{{item.valor}}'), color: '{{item.color}}', highlight: '{{item.highlight}}', label: '{{item.label}}' });
+            {% endfor %}
+   	    var graficoUtilizacao = new Chart(ctx).Pie(dadosConsultas);
+
+
+	    var ctx = $("#grafico_pontos_mais_utilizados").get(0).getContext("2d");
+var data = {
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    datasets: [
+        {
+            label: "My First dataset",
+            fillColor: "rgba(220,220,220,0.5)",
+            strokeColor: "rgba(220,220,220,0.8)",
+            highlightFill: "rgba(220,220,220,0.75)",
+            highlightStroke: "rgba(220,220,220,1)",
+            data: [65, 59, 80, 81, 56, 55, 40]
+        },
+        {
+            label: "My Second dataset",
+            fillColor: "rgba(151,187,205,0.5)",
+            strokeColor: "rgba(151,187,205,0.8)",
+            highlightFill: "rgba(151,187,205,0.75)",
+            highlightStroke: "rgba(151,187,205,1)",
+            data: [28, 48, 40, 19, 86, 27, 90]
+        }
+    ]
+};
+
+var myBarChart = new Chart(ctx).Bar(data, options);
+        });
+
+        function exibir_mensagem(id) {
+            alert(id);
+        }
+    </script>
+    <!-- Place this asynchronous JavaScript just before your </body> tag -->
+    <script type="text/javascript">
+        (function() {
+            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+            po.src = 'https://apis.google.com/js/client:plusone.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+        })();
+    </script>
+
+</html>
