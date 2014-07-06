@@ -9,6 +9,15 @@ Model que mapeia um Tipo de Coleta.
 '''
 class Tipo(models.Model):
     nome = models.CharField('Tipo de Coleta', max_length=200)
+    cor = models.CharField('Cor', max_length=30, choices= (
+        ('azul', 'azul' ),
+        ('vermelho', 'vermelho' ),
+        ('amarelo', 'amarelo' ),
+        ('verde', 'verde' ),
+        ('cinza', 'cinza' ),
+        ('prata', 'prata' ),
+        ('dourado', 'dourado' ),
+            ))
 
     class Meta:
         verbose_name = u'Tipo'

@@ -77,15 +77,26 @@
                     content: 'FALA QUE É NOIS'
                 });
 
+                var image = new google.maps.MarkerImage('{{STATIC_URL}}img/{{ estatistica.tipo_descarte.cor}}.png',
+                    new google.maps.Size(64, 64),
+                    new google.maps.Point(0,0),
+                    new google.maps.Point(0, 32));
+
+                var shape = {
+                    coord: [1, 1, 1, 32, 30, 32, 30, 1],
+                    type: 'poly'
+                };
+
                 var marcador_ponto = new google.maps.Marker({
                     map: mapa,
                     draggable: false,
                     animation: google.maps.Animation.DROP,
-                    position: posicao
+                    position: posicao,
+                    icon: image
                 });               
 
                 google.maps.event.addListener(marcador_ponto, 'click', function() {
-                    conteudo = '<b>Tipo de Descarte:</b>{{ estatistica.tipo.nome }}<br>';
+                    conteudo = '<b>Tipo de Descarte:</b>{{ estatistica.tipo_descarte.nome }}<br>';
 
                     infowindow.setContent(conteudo);
                     infowindow.open(mapa, this);
