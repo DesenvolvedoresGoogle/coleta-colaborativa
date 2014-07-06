@@ -4,43 +4,59 @@
 		<meta charset="UTF-8">
 		<title>Coleta Colaborativa</title>
 		<link rel="stylesheet" href="{{STATIC_URL}}css/index.css">
-		<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBhp-XEVy9T9yaht07LCj6SdwaztO0tVmc&sensor=true"></script>
-        <script src='http://code.jquery.com/jquery-2.1.1.min.js'></script>
-		<script src="{{STATIC_URL}}js/login_api.js"></script>
-		<script src="{{STATIC_URL}}js/maps.js"></script>
+		<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.min.css">
+		<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-theme.min.css">
 	</head>
 	<body>
-		<!-- navbar begin -->
-		<div class="navbar">
-			<ul>
-				<li><a href="#">Mapa</a></li>
-				<li><a href="#">Estatísticas</a></li>
-				<li><a href="form_ponto.html">Novo Ponto</a></li>
-				<li>
-					<form method='POST'>
-				       		<span id="signinButton">
-                					<button class="g-signin"
-                    						data-scope="https://www.googleapis.com/auth/plus.login"
-                    						data-clientid="1054618264919-m26qm6qvk5cdh1o2pha90dnt2uosuda6.apps.googleusercontent.com"
-                	    					data-callback="signinCallback"
-        	            					data-theme="dark"
-	                    					data-cookiepolicy="single_host_origin"
-                    						data-requestvisibleactions="http://schemas.google.com/AddActivity"
-                    						data-width="wide">
-                					</button>
-            					</span>
-        				</form>
-				</li>
-			</ul>
-		</div>
-		<!-- navbar end -->
+		<nav class="navbar navbar-default" role="navigation">
+  			<div class="container-fluid">
+    				<div class="navbar-header">
+      					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        					<span class="sr-only">Toggle navigation</span>
+        					<span class="icon-bar"></span>
+        					<span class="icon-bar"></span>
+        					<span class="icon-bar"></span>
+      					</button>
+      					<a class="navbar-brand" href="#">ColetaColaborativa</a>
+	    			</div>
 
-		<!-- content begin -->
+    				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      					<ul class="nav navbar-nav">
+        					<li class="active"><a href="#">Home</a></li>
+        					<li><a href="#">Estatística</a></li>
+        					<li><a href="view/pontos/">Novo Ponto</a></li>
+      					</ul>
+      					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<form method='POST'>
+								<span id="signinButton">
+									<button class="g-signin"
+										data-scope="https://www.googleapis.com/auth/plus.login"
+										data-clientid="1054618264919-m26qm6qvk5cdh1o2pha90dnt2uosuda6.apps.googleusercontent.com"
+										data-callback="signinCallback"
+										data-theme="dark"
+										data-cookiepolicy="single_host_origin"
+										data-requestvisibleactions="http://schemas.google.com/AddActivity"
+										data-width="wide">
+									</button>
+								</span>
+							</form>
+						</li>
+      					</ul>
+				</div>
+			</div>
+		</nav>
+
 		<div id="mapa_coleta">
 		</div>
-		<!-- content end -->
 	</body>
 
+
+	<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBhp-XEVy9T9yaht07LCj6SdwaztO0tVmc&sensor=true"></script>
+	<script src='http://code.jquery.com/jquery-2.1.1.min.js'></script>
+	<script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+	<script src="{{STATIC_URL}}js/login_api.js"></script>
+	<script src="{{STATIC_URL}}js/maps.js"></script>
 	<!-- Place this asynchronous JavaScript just before your </body> tag -->
     	<script type="text/javascript">
       		(function() {
