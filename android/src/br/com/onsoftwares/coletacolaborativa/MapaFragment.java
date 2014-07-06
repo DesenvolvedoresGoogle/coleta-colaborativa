@@ -8,13 +8,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,7 +27,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TableRow;
@@ -96,55 +105,161 @@ import com.google.android.gms.maps.model.MarkerOptions;
     				.title("Minha Localização")
     				.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_marker)));
     		
+    		// Mostra dialog ao clicar na info Window
     		map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener () {
 				@Override
-				public void onInfoWindowClick(Marker marker) {
-					if (!marker.equals(Global.myLocation)) {
-						Dialog dialog = new Dialog(getActivity());
-						dialog.setContentView(R.layout.dialog_marker);
-						dialog.setTitle("Ponto de coleta");
+				public void onInfoWindowClick(final Marker marker) {
+					if (!marker.equals(Global.myLocation) && !marker.equals(Global.newLocation)) {
+						
+						AlertDialog alertDialog;
+						LayoutInflater inflater = LayoutInflater.from(context);
+						View dialog_layout = inflater.inflate(R.layout.dialog_marker, (ViewGroup) getActivity().findViewById(R.id.dialog_marker));
 						
 						final ColetaMarker m = markersOnMap.get(markersOnMapId.get(marker.getId()));
 						
-						TextView tiposTextView = (TextView) dialog.findViewById(R.id.dialog_marker_tipos);
-						tiposTextView.setText(m.getTipos());
+						TextView tiposTextView = (TextView) dialog_layout.findViewById(R.id.dialog_marker_tipos);
 						
-						TextView descricaoTextView = (TextView) dialog.findViewById(R.id.dialog_marker_desc);
+						String tiposString = "";
+						for (int i = 0; i < m.getTipos().size(); i++) {
+							tiposString += m.getTipos().get(i).getNome();
+							if (i !=  m.getTipos().size() - 1)
+								tiposString += ", ";
+						}
+						
+						tiposTextView.setText(tiposString);
+						
+						TextView descricaoTextView = (TextView) dialog_layout.findViewById(R.id.dialog_marker_desc);
 						descricaoTextView.setText(m.getDescricao());
 						
 						if (m.isPrivado()) {
-							TableRow rowPrivado = (TableRow) dialog.findViewById(R.id.dialog_marker_private);
+							TableRow rowPrivado = (TableRow) dialog_layout.findViewById(R.id.dialog_marker_private);
 							rowPrivado.setVisibility(View.VISIBLE);
 							
-							TableRow rowUsuario = (TableRow) dialog.findViewById(R.id.dialog_marker_usuario_row);
+							TableRow rowUsuario = (TableRow) dialog_layout.findViewById(R.id.dialog_marker_usuario_row);
 							rowUsuario.setVisibility(View.VISIBLE);
 							
-							TableRow rowEmail = (TableRow) dialog.findViewById(R.id.dialog_marker_email_row);
+							TableRow rowEmail = (TableRow) dialog_layout.findViewById(R.id.dialog_marker_email_row);
 							rowEmail.setVisibility(View.VISIBLE);
 							
-							TextView usuarioTextView = (TextView) dialog.findViewById(R.id.dialog_marker_usuario);
+							TextView usuarioTextView = (TextView) dialog_layout.findViewById(R.id.dialog_marker_usuario);
 							usuarioTextView.setText(m.getNomeUsuario());
 							
-							Log.d("NOME", m.getNomeUsuario());
-							
-							TextView emailTextView = (TextView) dialog.findViewById(R.id.dialog_marker_email);
+							TextView emailTextView = (TextView) dialog_layout.findViewById(R.id.dialog_marker_email);
 							emailTextView.setText(m.getEmail());
 						}
 						
-						Button confirmarDescarte = (Button) dialog.findViewById(R.id.dialog_marker_confirmar_descarte);
-						confirmarDescarte.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								Toast.makeText(context, m.getLatitude() + " - " + m.getLongitude() , Toast.LENGTH_SHORT).show();
+						AlertDialog.Builder db = new AlertDialog.Builder(getActivity());
+						db.setTitle("Ponto de coleta");
+						
+						db.setPositiveButton("Confirmar descarte", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialogInterface, int which) {
+								final Dialog dialog = new Dialog(getActivity());
+								dialog.setContentView(R.layout.popup_tipos);
+								dialog.setTitle("Selecionar coleta");
+								WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+							    lp.copyFrom(dialog.getWindow().getAttributes());
+							    
+							    lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+							    lp.height = (int) (320 * getResources().getDisplayMetrics().density);;
+							    
+							    dialog.getWindow().setAttributes(lp);
+							    
+								ListView listTipos = (ListView) dialog.findViewById(R.id.popup_list_tipos);
+								ListTiposAdapter adapter = new ListTiposAdapter(context, m.getTipos());
+								listTipos.setAdapter(adapter);
+								
+								listTipos.setOnItemClickListener(new OnItemClickListener() {
+									@Override
+									public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+										new SendTipoDescartado().execute(new String[] { m.getTipos().get(position).getId(), m.getPontoId(), 
+												Global.myLocation.getPosition().latitude + "", Global.myLocation.getPosition().longitude + "" });
+										dialog.dismiss();
+									}
+								});
+								
+								dialog.show();
 							}
 						});
 						
-						dialog.show();
-					}
-					
+						db.setNegativeButton("Traçar rota", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+					                    Uri.parse("http://maps.google.com/maps?saddr=" + Global.myLocation.getPosition().latitude + ","
+					                    + Global.myLocation.getPosition().longitude + "&daddr=" + marker.getPosition().latitude + "," 
+					                    + marker.getPosition().longitude + ""));
+								startActivity(intent);
+							}
+						});
+						
+						db.setView(dialog_layout);
+						
+						alertDialog = db.show();
+						
+						
+					} else if (marker.equals(Global.newLocation)) {
+						AlertDialog dialog;
+						LayoutInflater inflater = LayoutInflater.from(context);
+						View dialog_layout = inflater.inflate(R.layout.dialog_novo_ponto, (ViewGroup) getActivity().findViewById(R.id.dialog_novo_ponto));
+						
+						final EditText descricaoEditText = (EditText) dialog_layout.findViewById(R.id.dialog_novo_ponto_descricao);
+						ListView listViewTipos = (ListView) dialog_layout.findViewById(R.id.dialog_novo_ponto_list);
+						final ListTiposCheckAdapter adapter = new ListTiposCheckAdapter(context, Global.TIPOS);
+						listViewTipos.setAdapter(adapter);
+						
+						AlertDialog.Builder db = new AlertDialog.Builder(getActivity());
+						db.setTitle("Novo ponto de coleta");
+						
+						db.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								new InsertNovoPontoAsync().execute(new String[] {
+										marker.getPosition().latitude + "", marker.getPosition().longitude + "", descricaoEditText.getText().toString(), adapter.getListaTipos() });
+							}
+						});
+						db.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+							    dialog.dismiss();
+							}
+						});
+						db.setView(dialog_layout);
+						
+						for (ItemTipo it : Global.TIPOS)
+							it.setChecked(false);
+						
+						listViewTipos.setOnItemClickListener(new OnItemClickListener() {
+							@Override
+							public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+								if (Global.TIPOS.get(position).isChecked())
+									Global.TIPOS.get(position).setChecked(false);
+								else
+									Global.TIPOS.get(position).setChecked(true);
+								
+								adapter.notifyDataSetChanged();
+							}
+						});
+						
+						dialog = db.show();
+						
+					}	
 				}
    
     		});
+    		
+    		// Clicar por longo tempo iniciar processo de cadastramento de ponto
+    		map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+				@Override
+				public void onMapLongClick(LatLng point) {
+					
+					if (Global.newLocation != null)
+						Global.newLocation.remove();
+					
+					Global.newLocation = map.addMarker(new MarkerOptions()
+				        .position(point)
+				        .title("Novo ponto")           
+				        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_insert_ico)));
+					
+					Global.newLocation.showInfoWindow();
+				}
+			});
     		
     		new GetTiposEPontosIniciaisAsync().execute(Global.myLocation.getPosition().latitude + "", Global.myLocation.getPosition().longitude + "");
     		
@@ -181,8 +296,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 			}
     	}
     	
+    	public void initialize() {
+    		map.clear();
+    		addUserMarker();
+    		new GetTiposEPontosIniciaisAsync().execute(Global.myLocation.getPosition().latitude + "", Global.myLocation.getPosition().longitude + "");
+    	}
+    	
     	// AsyncTask para pegar os tipos de descartes
-    	private class GetTiposEPontosIniciaisAsync extends AsyncTask<String, Void, Integer> {
+    	public class GetTiposEPontosIniciaisAsync extends AsyncTask<String, Void, Integer> {
     		
     		private JSONObject jsonPontos;
     		
@@ -226,12 +347,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
     				JSONArray pontos;
 					try {
 						pontos = jsonPontos.getJSONArray("pontos");
-		    	    
+
+						
+						markersOnMap.clear();
+						markersOnMapId.clear();
+						
 			    	    for (int i = 0; i < pontos.length(); i++) {
 			    	    	JSONArray tiposPonto = pontos.getJSONObject(i).getJSONArray("tipos");
 			    	    	String markerTitle = "";
+			    	    	ArrayList<ItemTipo> tiposArray = new ArrayList<ItemTipo>();
 							for (int j = 0; j < tiposPonto.length(); j++) {
 								markerTitle += tiposPonto.getJSONObject(j).getString("nome");
+								tiposArray.add(new ItemTipo(tiposPonto.getJSONObject(j).getString("id"), tiposPonto.getJSONObject(j).getString("nome")));
 								if (j != tiposPonto.length() - 1)
 									markerTitle += ", ";
 							}
@@ -240,15 +367,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 			    				.position(new LatLng(Double.parseDouble(pontos.getJSONObject(i).getString("latitude")), 
 			    						Double.parseDouble(pontos.getJSONObject(i).getString("longitude"))))
 			    				.title(markerTitle)
-			    				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
+			    				.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_ico)));
 			    	    	
+							String pontoId = pontos.getJSONObject(i).getString("id");
 			    	    	String descricao = pontos.getJSONObject(i).getString("descricao");
 							boolean privado = pontos.getJSONObject(i).getBoolean("ponto_privado");
 							JSONObject usuario = pontos.getJSONObject(i).getJSONObject("usuario");
 							String nome = usuario.getString("nome");
 							String email = usuario.getString("email");
 							
-							markersOnMap.add(new ColetaMarker(markerTitle, descricao, privado, email, nome, marker.getPosition().latitude, marker.getPosition().longitude));
+							markersOnMap.add(new ColetaMarker(pontoId, tiposArray, descricao, privado, email, nome, marker.getPosition().latitude, marker.getPosition().longitude));
 							markersOnMapId.put(marker.getId(), i);
 			    	    }
 					} catch (JSONException e) {
@@ -256,6 +384,78 @@ import com.google.android.gms.maps.model.MarkerOptions;
 						e.printStackTrace();
 					}
     				
+    			}
+    		}
+    	}
+    	
+    	// AsyncTask para confirmar descarte de tipo de coleta
+    	public class SendTipoDescartado extends AsyncTask<String, Void, Integer> {
+    		@Override
+    		protected Integer doInBackground (String... params) {
+    			ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+    		   
+    			if (networkInfo != null && networkInfo.isConnected()) {
+    		        try {
+    		        	URL url = new URL(Global.API_URL + "/confirmar_descarte/");
+    		    	    
+    		        	String urlParams = "tipo_id=" + params[0] + "&ponto_id=" + params[1] + "&latitude=" + params[2] + "&longitude=" + params[3];
+    		    	    JSONObject response = Global.HttpRequest(urlParams, url);
+   
+    		    	    
+    		    	    return response.getInt("response");
+    		        } catch (Exception e) {
+    		        	Log.e("GetTiposAsync", e.toString());
+    		        	return -1;
+    		        }
+    		    } else {
+    		    	return -3;
+    		    }
+    		}
+    		
+    		@Override
+    		protected void onPostExecute(Integer result) {
+    			if (result != 1)
+    				Toast.makeText(context, "Ocorreu um erro ao conectar", Toast.LENGTH_SHORT).show();
+    			else if (result == 1) {
+    				Toast.makeText(context, "Descarte cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
+    			}
+    		}
+    	}
+    	
+    	// AsyncTask para cadastrar novo ponto
+    	public class InsertNovoPontoAsync extends AsyncTask<String, Void, Integer> {
+    		@Override
+    		protected Integer doInBackground (String... params) {
+    			ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+    		   
+    			if (networkInfo != null && networkInfo.isConnected()) {
+    		        try {
+    		        	URL url = new URL(Global.API_URL + "/novo_ponto/");
+    		    	    
+    		        	String urlParams = "latitude=" + params[0] + "&longitude=" + params[1] + "&descricao=" + params[2] + "&tipos=" + params[3];
+    		        	Log.d("PARAMS", urlParams);
+    		    	    JSONObject response = Global.HttpRequest(urlParams, url);
+   
+    		    	    
+    		    	    return response.getInt("response");
+    		        } catch (Exception e) {
+    		        	Log.e("GetTiposAsync", e.toString());
+    		        	return -1;
+    		        }
+    		    } else {
+    		    	return -3;
+    		    }
+    		}
+    		
+    		@Override
+    		protected void onPostExecute(Integer result) {
+    			if (result != 1)
+    				Toast.makeText(context, "Ocorreu um erro ao conectar", Toast.LENGTH_SHORT).show();
+    			else if (result == 1) {
+    				Toast.makeText(context, "Ponto cadastrado com sucesso", Toast.LENGTH_SHORT).show();
+    				Global.newLocation.remove();
     			}
     		}
     	}

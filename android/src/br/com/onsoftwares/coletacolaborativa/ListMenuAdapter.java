@@ -63,10 +63,7 @@ public class ListMenuAdapter extends BaseAdapter {
 	
 	public void populateMenu() {
 		menuItens.add(new ItemMenu("Mudar mapa", R.drawable.menu_ico));
-		menuItens.add(new ItemMenu("Menu 2", R.drawable.menu_ico));
-		menuItens.add(new ItemMenu("Menu 3", R.drawable.menu_ico));
-		menuItens.add(new ItemMenu("Menu 4", R.drawable.menu_ico));
-		menuItens.add(new ItemMenu("Menu 5", R.drawable.menu_ico));
+		menuItens.add(new ItemMenu("Pontos próximos", R.drawable.menu_ico));
 	}
 
 }

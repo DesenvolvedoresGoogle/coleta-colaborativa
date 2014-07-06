@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'consulta_pontos/', views_pontos.consulta_todos_pontos),
     url(r'consulta_ponto_proximo_tipo/', views_pontos.consulta_pontos_proximos_tipos),
     url(r'consulta_ponto_proximo/', views_pontos.consulta_pontos_proximos),
+    url(r'confirmar_descarte/', views_pontos.confirmar_descarte),
 
     url(r'^$', views_home.index, name='index'),
 

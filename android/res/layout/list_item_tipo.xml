@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<TextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list_tipo_textview"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:layout_toRightOf="@id/icon"
-    android:textColor="@color/black"
-    android:textSize="18sp"
-    android:gravity="center_vertical"
-    android:padding="10dp" />
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal">
+    
+	<TextView
+	    android:id="@+id/list_tipo_textview"
+	    android:layout_width="match_parent"
+	    android:layout_height="50dp"
+	    android:textColor="@color/black"
+	    android:textSize="18sp"
+	    android:gravity="center_horizontal"
+	    android:padding="10dp"
+	    android:text="ITEM TIPO"
+	    android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

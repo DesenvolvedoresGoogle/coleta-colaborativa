@@ -1,7 +1,10 @@
 package br.com.onsoftwares.coletacolaborativa;
 
+import java.util.ArrayList;
+
 public class ColetaMarker {
-	private String tipos;
+	private String pontoId;
+	private ArrayList<ItemTipo> tipos = new ArrayList<ItemTipo>();
 	private String descricao;
 	private boolean privado;
 	private String email;
@@ -10,7 +13,7 @@ public class ColetaMarker {
 	private double longitude;
 	
 	
-	public ColetaMarker(String tipos, String descricao, boolean privado,
+	public ColetaMarker(ArrayList<ItemTipo> tipos, String descricao, boolean privado,
 			String email, String nomeUsuario) {
 		super();
 		this.tipos = tipos;
@@ -19,11 +22,12 @@ public class ColetaMarker {
 		this.email = email;
 		this.nomeUsuario = nomeUsuario;
 	}
-	
-	
-	public ColetaMarker(String tipos, String descricao, boolean privado,
-			String email, String nomeUsuario, double latitude, double longitude) {
+
+	public ColetaMarker(String pontoId, ArrayList<ItemTipo> tipos,
+			String descricao, boolean privado, String email,
+			String nomeUsuario, double latitude, double longitude) {
 		super();
+		this.pontoId = pontoId;
 		this.tipos = tipos;
 		this.descricao = descricao;
 		this.privado = privado;
@@ -34,10 +38,18 @@ public class ColetaMarker {
 	}
 
 
-	public String getTipos() {
+	public String getPontoId() {
+		return pontoId;
+	}
+
+	public void setPontoId(String pontoId) {
+		this.pontoId = pontoId;
+	}
+
+	public ArrayList<ItemTipo> getTipos() {
 		return tipos;
 	}
-	public void setTipos(String tipos) {
+	public void setTipos(ArrayList<ItemTipo> tipos) {
 		this.tipos = tipos;
 	}
 	public String getDescricao() {

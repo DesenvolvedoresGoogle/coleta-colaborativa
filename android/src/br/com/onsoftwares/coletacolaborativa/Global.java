@@ -20,6 +20,8 @@ public class Global {
 	
 	public static Marker myLocation;
 	
+	public static Marker newLocation;
+	
 	
 	// Método para fazer as requisições HTTP e retornar a resposta JSON
 	public static JSONObject HttpRequest(String urlParameters, URL url) throws Exception{

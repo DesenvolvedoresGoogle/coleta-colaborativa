@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
+import br.com.onsoftwares.coletacolaborativa.MapaFragment.GetTiposEPontosIniciaisAsync;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -148,6 +149,13 @@ public class MainActivity extends ActionBarActivity {
 						mapFragment.map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 					menuLayout.closeDrawer(Gravity.LEFT);
 					break;
+				case 1:
+					mapFragment.initialize();
+					menuLayout.closeDrawer(Gravity.LEFT);
+					mapFragment.markersOnMap.clear();
+					mapFragment.markersOnMapId.clear();
+					Global.TIPOS.clear();
+					break;
 				default:
 					Toast.makeText(MainActivity.this, "Hue", Toast.LENGTH_SHORT).show();
 			}
@@ -178,27 +186,10 @@ public class MainActivity extends ActionBarActivity {
 				dialog.dismiss();
 				new GetPontosDeTipoAsync().execute(Global.TIPOS.get(position).getId(), Global.myLocation.getPosition().latitude + "", Global.myLocation.getPosition().longitude + "");
 			}
-			
 		});
-		
-		//TODO: botão de fechar nao ta aparecendo
-		Button dialogButton = (Button) dialog.findViewById(R.id.dialog_button_fechar);
-		// if button is clicked, close the custom dialog
-		dialogButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dialog.dismiss();
-			}
-		});
-		
 		dialog.show();
 		
 	}
-    
-    // Botão de confirmar coleta é clicado no dialogue do marcador
-    public void confirmarDescarte (View v) {
-    	Toast.makeText(MainActivity.this, ((LatLng)v.getTag()).toString(), Toast.LENGTH_SHORT).show();
-    }
     
     // AsyncTask para os pontos de descarte de acordo com opção do usuário
 	private class GetPontosDeTipoAsync extends AsyncTask<String, Void, Integer> {
@@ -241,8 +232,10 @@ public class MainActivity extends ActionBarActivity {
 					mapFragment.addUserMarker();
 					
 					String markerTitle = "";
+					ArrayList<ItemTipo> tiposArray = new ArrayList<ItemTipo>();
 					for (int i = 0; i < tipos.length(); i++) {
 						markerTitle += tipos.getJSONObject(i).getString("nome");
+						tiposArray.add(new ItemTipo(tipos.getJSONObject(i).getString("id"), tipos.getJSONObject(i).getString("nome")));
 						if (i != tipos.length() - 1)
 							markerTitle += ", ";
 					}
@@ -250,8 +243,9 @@ public class MainActivity extends ActionBarActivity {
 					Marker marker = mapFragment.map.addMarker(new MarkerOptions()
 		    				.position(new LatLng(Double.parseDouble(ponto.getString("latitude")), Double.parseDouble(ponto.getString("longitude"))))
 		    				.title(markerTitle)
-		    				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
+		    				.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_ico)));
 					
+					String pontoId = ponto.getString("id");
 					String descricao = ponto.getString("descricao");
 					boolean privado = ponto.getBoolean("ponto_privado");
 					JSONObject usuario = ponto.getJSONObject("usuario");
@@ -259,7 +253,8 @@ public class MainActivity extends ActionBarActivity {
 					String email = usuario.getString("email");
 					
 					
-					mapFragment.markersOnMap.add(new ColetaMarker(markerTitle, descricao, privado, email, nome, marker.getPosition().latitude, marker.getPosition().longitude));
+					
+					mapFragment.markersOnMap.add(new ColetaMarker(pontoId, tiposArray, descricao, privado, email, nome, marker.getPosition().latitude, marker.getPosition().longitude));
 					mapFragment.markersOnMapId.put(marker.getId(), 0);
 					
 					// Alterando evento

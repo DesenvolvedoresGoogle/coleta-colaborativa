@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/dialog_novo_ponto" >
+    
+	<EditText 
+	    android:id="@+id/dialog_novo_ponto_descricao"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:paddingTop="20dp"
+	    android:paddingBottom="20dp"
+	    android:layout_marginTop="10dp"
+	    android:layout_marginBottom="10dp"
+	    android:hint="Descriçao"
+	    android:textColor="@color/black"/>
+	
+	<ListView
+	    android:id="@+id/dialog_novo_ponto_list"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" />
+    
+</LinearLayout>

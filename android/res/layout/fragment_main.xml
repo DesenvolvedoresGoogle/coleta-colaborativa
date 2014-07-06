@@ -11,10 +11,12 @@
         class="com.google.android.gms.maps.SupportMapFragment" />
     
     <Button
-        android:text="COLETAR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:onClick="selectTipo" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:onClick="selectTipo"
+        android:background="@android:color/transparent"
+        android:drawableTop="@drawable/search_button"/>
 
 </RelativeLayout>

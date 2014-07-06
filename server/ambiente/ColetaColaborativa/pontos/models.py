@@ -9,6 +9,15 @@ Model que mapeia um Tipo de Coleta.
 '''
 class Tipo(models.Model):
     nome = models.CharField('Tipo de Coleta', max_length=200)
+    cor = models.CharField('Cor', max_length=30, choices= (
+        ('azul', 'azul' ),
+        ('vermelho', 'vermelho' ),
+        ('amarelo', 'amarelo' ),
+        ('verde', 'verde' ),
+        ('cinza', 'cinza' ),
+        ('prata', 'prata' ),
+        ('dourado', 'dourado' ),
+            ))
 
     class Meta:
         verbose_name = u'Tipo'
@@ -47,6 +56,7 @@ class Ponto(models.Model):
 
     def get_dicionario(self):
         retorno = {
+            'id' : str(self.id),
             'latitude' : str(self.latitude),
             'longitude' : str(self.longitude),
             'ponto_privado' : self.ponto_privado,

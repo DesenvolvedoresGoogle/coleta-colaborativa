@@ -44,7 +44,6 @@ public class ListTiposAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.list_item_tipo, null);
 		}
 		
-		//TODO: Resolver bug do espaçamento no texto
 		
 		TextView textView = (TextView) convertView.findViewById(R.id.list_tipo_textview);
 		textView.setText(tipoItens.get(position).getNome());
