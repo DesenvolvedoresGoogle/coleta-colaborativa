@@ -9,6 +9,7 @@ from pontos.models import Ponto
 from pontos.models import Tipo
 
 import json
+import haversine
 
 # Create your views here.
 @csrf_exempt
@@ -81,8 +82,41 @@ def consulta_todos_pontos(request):
 
     return HttpResponse(json.dumps(response))
 
-#def consulta_pontos_proximos(request):
-    #pontos = Ponto.objects.all()
+@csrf_exempt
+def consulta_pontos_proximos_tipos(request):
+    if request.method == 'POST':
+        id_tipo = request.POST['tipo_id']
+        latitude = request.POST['latitude']
+        longitude = request.POST['longitude']
+
+        pontos = Ponto.objects.filter(tipos__id=id_tipo)
+
+        melhor_distacia = None
+        melhor_ponto = None
+
+        for ponto in pontos:
+            distancia = haversine.haversine(float(latitude), float(longitude), float(ponto.latitude), float(ponto.longitude))
+
+            if melhor_distacia == None:
+                melhor_distacia = distancia
+                melhor_ponto = ponto
+                continue
+
+            if melhor_distacia > distancia:
+                melhor_distacia = distancia
+                melhor_ponto = ponto
+
+        response = {
+            'response' : 1,
+            'ponto' : ponto.get_dicionario()
+        }
+    else:
+        response = {
+                'response' : -1,
+            }
+
+    return HttpResponse(json.dumps(response))
+
 
 def create_json_novo_ponto():
     dados_client = {

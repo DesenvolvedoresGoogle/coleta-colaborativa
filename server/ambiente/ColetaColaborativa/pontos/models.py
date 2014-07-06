@@ -33,7 +33,6 @@ class Ponto(models.Model):
     longitude = models.DecimalField('Longitude', max_digits=10, decimal_places=8)
     ponto_privado = models.BooleanField('Ponto Privado', default=False)
     descricao = models.TextField('Descrição')
-    observacao = models.TextField('Observações')
 
     #Associação entre ponto e usuário que cadastrou o ponto.
     usuario = models.ForeignKey(Usuario)

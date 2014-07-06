@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'novo_ponto/', views_pontos.novo_ponto),
     url(r'consulta_tipos/', views_pontos.consulta_todos_tipos),
     url(r'consulta_pontos/', views_pontos.consulta_todos_pontos),
+    url(r'consulta_ponto_proximo_tipo/', views_pontos.consulta_pontos_proximos_tipos),
 
     url(r'^$', views_home.index),
 
