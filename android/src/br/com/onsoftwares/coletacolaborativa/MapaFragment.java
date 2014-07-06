@@ -372,9 +372,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 							String pontoId = pontos.getJSONObject(i).getString("id");
 			    	    	String descricao = pontos.getJSONObject(i).getString("descricao");
 							boolean privado = pontos.getJSONObject(i).getBoolean("ponto_privado");
-							JSONObject usuario = pontos.getJSONObject(i).getJSONObject("usuario");
-							String nome = usuario.getString("nome");
-							String email = usuario.getString("email");
+							String nome = "", email = "";
+							if  (privado) {
+								JSONObject usuario = pontos.getJSONObject(i).getJSONObject("usuario");
+								nome = usuario.getString("nome");
+								email = usuario.getString("email");
+							}
 							
 							markersOnMap.add(new ColetaMarker(pontoId, tiposArray, descricao, privado, email, nome, marker.getPosition().latitude, marker.getPosition().longitude));
 							markersOnMapId.put(marker.getId(), i);
