@@ -1,17 +1,17 @@
-var pontoInicial = new google.maps.LatLng(-21.76249, -43.352834);
-var pontoColeta;
-var mapa;
+$(document).ready( function() {
+	var pontoInicial = new google.maps.LatLng(-21.76249, -43.352834);
+	var pontoColeta;
+	var mapa;
 
-function initialize() {
-	document.getElementById("lat").value = pontoInicial.lat();
-	document.getElementById("long").value = pontoInicial.lng();
+	document.getElementById('lat').value = pontoInicial.lat();
+	document.getElementById('long').value = pontoInicial.lng();
 
 	var mapOptions = {
 		zoom: 17,
 		center: pontoInicial
 	};
 
-  	mapa = new google.maps.Map(document.getElementById("mapa_coleta"),
+  	mapa = new google.maps.Map(document.getElementById('mapa_coleta'),
           	mapOptions);
 
 
@@ -30,10 +30,9 @@ function initialize() {
   		}
 	});
   	google.maps.event.addListener(pontoColeta, 'dragend', function(event) {
-		document.getElementById("lat").value = event.latLng.lat();
-		document.getElementById("long").value = event.latLng.lng();
+		document.getElementById('lat').value = event.latLng.lat();
+		document.getElementById('long').value = event.latLng.lng();
   	});
-}
 
-google.maps.event.addDomListener(window, 'load', initialize);
+});
 
