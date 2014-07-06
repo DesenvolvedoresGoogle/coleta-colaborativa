@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'pontos',
     'usuario',
+    'home',     
 )
 
 MIDDLEWARE_CLASSES = (
@@ -63,7 +64,7 @@ DATABASES = {
         'NAME': 'ColetaColaborativa',
         'USER': 'postgres',
         'PASSWORD': '123456',
-        'HOST': '127.0.0.1',
+        'HOST': '10.10.10.109',
         'PORT': '5432',
     }
 }

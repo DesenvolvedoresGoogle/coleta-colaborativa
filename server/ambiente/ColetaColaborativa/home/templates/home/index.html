@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Coleta Colaborativa</title>
+		<link rel="stylesheet" href="{{STATIC_URL}}css/index.css">
+		<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBhp-XEVy9T9yaht07LCj6SdwaztO0tVmc&sensor=true"></script>
+		<script src="{{STATIC_URL}}js/login_api.js"></script>
+		<script src="{{STATIC_URL}}js/maps.js"></script>
+	</head>
+	<body>
+		<!-- navbar begin -->
+		<div class="navbar">
+			<ul>
+				<li><a href="#">Mapa</a></li>
+				<li><a href="#">Estatísticas</a></li>
+				<li><a href="form_ponto.html">Novo Ponto</a></li>
+				<li>
+					<form method='POST'>
+				       		<span id="signinButton">
+                					<button class="g-signin"
+                    						data-scope="https://www.googleapis.com/auth/plus.login"
+                    						data-clientid="1054618264919-m26qm6qvk5cdh1o2pha90dnt2uosuda6.apps.googleusercontent.com"
+                	    					data-callback="signinCallback"
+        	            					data-theme="dark"
+	                    					data-cookiepolicy="single_host_origin"
+                    						data-requestvisibleactions="http://schemas.google.com/AddActivity"
+                    						data-width="wide">
+                					</button>
+            					</span>
+        				</form>
+				</li>
+			</ul>
+		</div>
+		<!-- navbar end -->
+
+		<!-- content begin -->
+		<!--<div id="mapa_coleta">-->
+		</div>
+		<!-- content end -->
+	</body>
+
+	<!-- Place this asynchronous JavaScript just before your </body> tag -->
+    	<script type="text/javascript">
+      		(function() {
+       			var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      			po.src = 'https://apis.google.com/js/client:plusone.js';
+       			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+     		})();
+    	</script>
+</html>
