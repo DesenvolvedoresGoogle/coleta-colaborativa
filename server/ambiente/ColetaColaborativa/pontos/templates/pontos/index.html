@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="{{STATIC_URL}}css/pontos_index.css">
 		<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.min.css">
 		<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-multiselect.css">
 	</head>
 	<body>
 		<nav class="navbar navbar-default" role="navigation">
@@ -65,6 +66,14 @@
 						<input name="longitude" id="long" type="text" />
 					</div>
 					<div>
+						<label for="tipos">Tipos:</label>
+						<select class="multiselect" multiple="multiple" name="tipos">
+							{% for tipo in tipos %}
+								<option value="{{tipo.id}}">{{tipo.nome}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div>
 						<input name="ponto_privado" type="checkbox" />
 						<label for="ponto_privado">Corporativo/ONG</label>
 					</div>
@@ -85,6 +94,8 @@
 
 		<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBhp-XEVy9T9yaht07LCj6SdwaztO0tVmc&sensor=true"></script>
 		<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+		<script src="{{STATIC_URL}}js/bootstrap-multiselect.js"></script>
 		<script src="{{STATIC_URL}}js/login_api.js"></script>
 		<script src="{{STATIC_URL}}js/maps_novo_ponto.js"></script>
 		<script type="text/javascript">
@@ -93,6 +104,11 @@
 				po.src = 'https://apis.google.com/js/client:plusone.js';
 				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 			})();
+		</script>
+		<script>
+			$(document).ready(function() {
+				$('.multiselect').multiselect();
+			});
 		</script>
 	</body>
 </html>

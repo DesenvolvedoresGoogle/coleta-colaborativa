@@ -5,14 +5,16 @@ from django.views.decorators.csrf import csrf_exempt
 from home import views as views_home
 
 from usuario.models import Usuario
-from pontos.models import Ponto
+from pontos.models import Ponto, Tipo
 
 @csrf_exempt
 def index(request):
+    tipos = Tipo.objects.all()
+   
     if request.method == 'POST':
         return processa_post_novo(request)
     else:
-        return render(request, 'pontos/index.html', {})
+        return render(request, 'pontos/index.html', {'tipos': tipos})
 
 def view_novo_ponto(request):
     return render(request, 'pontos/novo_ponto.html')
@@ -43,5 +45,14 @@ def processa_post_novo(request):
         ponto.ponto_privado = dados['ponto_privado']
     ponto.usuario = usuario
     ponto.save()
+    
+    dictTipos = dados['tipos'].split(',')
+    print dados['tipos']
+    print type(dados['tipos'])
+    print dictTipos
+    for tipo in dictTipos:
+        print tipo
+        tipo_banco = Tipo.objects.get(id=int(tipo))
+        ponto.tipos.add(tipo_banco)
 
     return render(request, 'home/index.html', {})
