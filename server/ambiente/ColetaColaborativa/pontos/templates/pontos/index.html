@@ -3,67 +3,96 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Coleta Colaborativa - Novo Ponto</title>
-
-		<link rel="stylesheet" href="{{STATIC_URL}}css/form_ponto.css">
-
-		<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-		<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBhp-XEVy9T9yaht07LCj6SdwaztO0tVmc&sensor=true"></script>
-		<script src="{{STATIC_URL}}js/login_api.js"></script>
-		<script src="{{STATIC_URL}}js/maps_novo_ponto.js"></script>
+		<link rel="stylesheet" href="{{STATIC_URL}}css/pontos_index.css">
+		<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.min.css">
+		<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-theme.min.css">
 	</head>
 	<body>
-		<!-- mapa início -->
-		<div id="mapa_coleta">
-		</div>
-		<!-- mapa fim -->
-		<!-- formulário início -->
-		<form method='POST'>
-			<span id="signinButton">
-				<button class="g-signin"
-					data-scope="https://www.googleapis.com/auth/plus.login"
-					data-clientid="1054618264919-m26qm6qvk5cdh1o2pha90dnt2uosuda6.apps.googleusercontent.com"
-					data-callback="signinCallback"
-					data-theme="dark"
-					data-cookiepolicy="single_host_origin"
-					data-requestvisibleactions="http://schemas.google.com/AddActivity"
-					data-width="wide">
-				</button>
-			</span>
-		</form>
-		<div id="form_ponto">
-			<form name="ponto" method="POST">
-				<div>
-					<label for="latitude">Latitude:</label>
-					<input name="latitude" id="lat" type="text" />
-				</div>
-				<div>
-					<label for="longitude">Longitude:</label>
-					<input name="longitude" id="long" type="text" />
-				</div>
-				<div>
-					<input name="ponto_privado" type="checkbox" />
-					<label for="ponto_privado">Corporativo/ONG</label>
-				</div>
-				<div>
-					<label for="descricao">Descrição</label>
-					<input name="descricao" type="textarea" />
-				</div>
-				<input type="hidden" name="id" />
-				<input type="hidden" name="nome" />
-				<input type="hidden" name="url" />
-				<input type="hidden" name="email" />
-				<button id="enviar">Enviar</button>
-			</form>
-		</div>
-		<!-- formulário fim -->
-	</body>
+		<nav class="navbar navbar-default" role="navigation">
+  			<div class="container-fluid">
+    				<div class="navbar-header">
+      					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        					<span class="sr-only">Toggle navigation</span>
+        					<span class="icon-bar"></span>
+        					<span class="icon-bar"></span>
+        					<span class="icon-bar"></span>
+      					</button>
+      					<a class="navbar-brand" href="#">ColetaColaborativa</a>
+	    			</div>
 
-	<!-- Place this asynchronous JavaScript just before your </body> tag -->
-    	<script type="text/javascript">
-      		(function() {
-       			var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-      			po.src = 'https://apis.google.com/js/client:plusone.js';
-       			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-     		})();
-    	</script>
+    				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      					<ul class="nav navbar-nav">
+        					<li><a href="#">Home</a></li>
+        					<li><a href="#">Estatística</a></li>
+        					<li class="active"><a href="view/pontos/">Novo Ponto</a></li>
+      					</ul>
+      					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<form method='POST'>
+								<span id="signinButton">
+									<button class="g-signin"
+										data-scope="https://www.googleapis.com/auth/plus.login"
+										data-clientid="1054618264919-m26qm6qvk5cdh1o2pha90dnt2uosuda6.apps.googleusercontent.com"
+										data-callback="signinCallback"
+										data-theme="dark"
+										data-cookiepolicy="single_host_origin"
+										data-requestvisibleactions="http://schemas.google.com/AddActivity"
+										data-width="wide">
+									</button>
+								</span>
+							</form>
+						</li>
+      					</ul>
+				</div>
+			</div>
+		</nav>
+		<div class="container">
+			<!-- mapa início -->
+			<div id="mapa_coleta">
+			</div>
+			<!-- mapa fim -->
+			<!-- formulário início -->
+			<div class="panel panel-default" id="form_ponto">
+			  <div class="panel-heading">Dados do Ponto</div>
+			  <div class="panel-body">			   
+				<form name="ponto" method="POST">
+					<div>
+						<label for="latitude">Latitude:</label>
+						<input name="latitude" id="lat" type="text" />
+					</div>
+					<div>
+						<label for="longitude">Longitude:</label>
+						<input name="longitude" id="long" type="text" />
+					</div>
+					<div>
+						<input name="ponto_privado" type="checkbox" />
+						<label for="ponto_privado">Corporativo/ONG</label>
+					</div>
+					<div>
+						<label for="descricao">Descrição</label>
+						<input name="descricao" type="textarea" />
+					</div>
+					<input type="hidden" name="id" />
+					<input type="hidden" name="nome" />
+					<input type="hidden" name="url" />
+					<input type="hidden" name="email" />
+					<button id="enviar">Enviar</button>
+				</form>
+				<!-- formulário fim -->
+			  </div>
+			</div>
+		</div>
+
+		<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBhp-XEVy9T9yaht07LCj6SdwaztO0tVmc&sensor=true"></script>
+		<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script src="{{STATIC_URL}}js/login_api.js"></script>
+		<script src="{{STATIC_URL}}js/maps_novo_ponto.js"></script>
+		<script type="text/javascript">
+			(function() {
+				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/client:plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			})();
+		</script>
+	</body>
 </html>
