@@ -1,10 +1,21 @@
 package br.com.onsoftwares.coletacolaborativa;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
-import com.google.android.gms.maps.GoogleMap;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -13,15 +24,30 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends ActionBarActivity {
 	
 	private ListMenuAdapter adapter;
 	private ArrayList<ItemMenu> menuItem = new ArrayList<ItemMenu>();
 	private ListView menu;
+	
+	private Dialog dialog;
+	
 	
 	private DrawerLayout menuLayout;
 	private ActionBarDrawerToggle actionBarMenu;
@@ -126,4 +152,94 @@ public class MainActivity extends ActionBarActivity {
 			}
 		}
     }
+    
+    // Botão de selecionar tipo
+    public void selectTipo (View v) {
+    	dialog = new Dialog(MainActivity.this);
+		dialog.setContentView(R.layout.popup_tipos);
+		dialog.setTitle("Selecionar coleta");
+		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+	    lp.copyFrom(dialog.getWindow().getAttributes());
+	    
+	    lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+	    lp.height = (int) (320 * getResources().getDisplayMetrics().density);;
+	    
+	    dialog.getWindow().setAttributes(lp);
+	    
+		ListView listTipos = (ListView) dialog.findViewById(R.id.popup_list_tipos);
+		ListTiposAdapter adapter = new ListTiposAdapter(MainActivity.this, Global.TIPOS);
+		listTipos.setAdapter(adapter);
+		
+		listTipos.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Toast.makeText(MainActivity.this, "Pegar pontos to tipo " + Global.TIPOS.get(position), Toast.LENGTH_SHORT).show();
+				dialog.dismiss();
+				new GetPontosDeTipoAsync().execute(Global.TIPOS.get(position).getId(), Global.myLocation.getPosition().latitude + "", Global.myLocation.getPosition().longitude + "");
+			}
+			
+		});
+		
+		//TODO: botão de fechar nao ta aparecendo
+		Button dialogButton = (Button) dialog.findViewById(R.id.dialog_button_fechar);
+		// if button is clicked, close the custom dialog
+		dialogButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		
+		dialog.show();
+		
+	}
+    
+ // AsyncTask para pegar os tipos de descartes
+	private class GetPontosDeTipoAsync extends AsyncTask<String, Void, Integer> {
+		
+		private JSONObject json;
+		
+		@Override
+		protected Integer doInBackground (String... params) {
+			ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		   
+			if (networkInfo != null && networkInfo.isConnected()) {
+		        try {
+		        	URL url = new URL(Global.API_URL + "/consulta_ponto_proximo_tipo/");
+		        	String urlParams = "tipo_id=" + params[0] + "&latitude=" + params[1] + "&longitude=" + params[2];
+		    	    json = Global.HttpRequest(urlParams, url);
+		    	    
+		    	    Log.d("GET PONTO TIPO", json.toString());
+		    	    
+		    	    return json.getInt("response");
+		        } catch (Exception e) {
+		        	Log.e("GetPontosDeTipoAsync", e.toString());
+		        	return -1;
+		        }
+		    } else {
+		    	return -3;
+		    }
+		}
+		
+		@Override
+		protected void onPostExecute(Integer result) {
+			if (result != 1)
+				Toast.makeText(MainActivity.this, "Ocorreu um erro ao conectar", Toast.LENGTH_SHORT).show();
+			else {
+				try {
+					JSONObject ponto = json.getJSONObject("ponto");
+					
+					Global.myLocation = mapFragment.map.addMarker(new MarkerOptions().
+		    				position(new LatLng(Double.parseDouble(ponto.getString("latitude")), Double.parseDouble(ponto.getString("longitude"))))
+		    				.title("hue")
+		    				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	}
 }
