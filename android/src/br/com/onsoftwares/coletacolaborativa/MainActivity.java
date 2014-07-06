@@ -38,6 +38,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends ActionBarActivity {
@@ -194,7 +195,12 @@ public class MainActivity extends ActionBarActivity {
 		
 	}
     
- // AsyncTask para pegar os tipos de descartes
+    // Botão de confirmar coleta é clicado no dialogue do marcador
+    public void confirmarDescarte (View v) {
+    	Toast.makeText(MainActivity.this, ((LatLng)v.getTag()).toString(), Toast.LENGTH_SHORT).show();
+    }
+    
+    // AsyncTask para os pontos de descarte de acordo com opção do usuário
 	private class GetPontosDeTipoAsync extends AsyncTask<String, Void, Integer> {
 		
 		private JSONObject json;
@@ -209,8 +215,6 @@ public class MainActivity extends ActionBarActivity {
 		        	URL url = new URL(Global.API_URL + "/consulta_ponto_proximo_tipo/");
 		        	String urlParams = "tipo_id=" + params[0] + "&latitude=" + params[1] + "&longitude=" + params[2];
 		    	    json = Global.HttpRequest(urlParams, url);
-		    	    
-		    	    Log.d("GET PONTO TIPO", json.toString());
 		    	    
 		    	    return json.getInt("response");
 		        } catch (Exception e) {
@@ -229,11 +233,37 @@ public class MainActivity extends ActionBarActivity {
 			else {
 				try {
 					JSONObject ponto = json.getJSONObject("ponto");
+					JSONArray tipos = ponto.getJSONArray("tipos");
 					
-					Global.myLocation = mapFragment.map.addMarker(new MarkerOptions().
-		    				position(new LatLng(Double.parseDouble(ponto.getString("latitude")), Double.parseDouble(ponto.getString("longitude"))))
-		    				.title("hue")
+					mapFragment.map.clear();
+					mapFragment.markersOnMap.clear();
+					mapFragment.markersOnMapId.clear();
+					mapFragment.addUserMarker();
+					
+					String markerTitle = "";
+					for (int i = 0; i < tipos.length(); i++) {
+						markerTitle += tipos.getJSONObject(i).getString("nome");
+						if (i != tipos.length() - 1)
+							markerTitle += ", ";
+					}
+					
+					Marker marker = mapFragment.map.addMarker(new MarkerOptions()
+		    				.position(new LatLng(Double.parseDouble(ponto.getString("latitude")), Double.parseDouble(ponto.getString("longitude"))))
+		    				.title(markerTitle)
 		    				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
+					
+					String descricao = ponto.getString("descricao");
+					boolean privado = ponto.getBoolean("ponto_privado");
+					JSONObject usuario = ponto.getJSONObject("usuario");
+					String nome = usuario.getString("nome");
+					String email = usuario.getString("email");
+					
+					
+					mapFragment.markersOnMap.add(new ColetaMarker(markerTitle, descricao, privado, email, nome, marker.getPosition().latitude, marker.getPosition().longitude));
+					mapFragment.markersOnMapId.put(marker.getId(), 0);
+					
+					// Alterando evento
+					Log.d("ID", marker.getId());
 					
 				} catch (JSONException e) {
 					e.printStackTrace();

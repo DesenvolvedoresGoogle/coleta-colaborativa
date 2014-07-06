@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*"
+        android:shrinkColumns="*"
+        android:padding="20dp">
+        
+        <TableRow 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipos"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:layout_gravity="right"
+                android:paddingRight="10dp" />
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dialog_marker_tipos"
+                android:layout_weight="1" 
+                android:text="euhauehauhea"
+                android:layout_gravity="left"
+                android:paddingLeft="10dp"/>
+        </TableRow>
+        
+        <TableRow 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            
+             <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descrição"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:layout_gravity="right"
+                android:paddingRight="10dp" />
+             
+             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dialog_marker_desc"
+                android:layout_weight="1"
+                android:text="euhauehauhea"
+                android:layout_gravity="left"
+                android:paddingLeft="10dp" />
+            
+        </TableRow>
+        
+        <TableRow 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dialog_marker_private"
+            android:visibility="gone" >
+            
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="Este ponto de coleta é privado"
+                android:textColor="@color/Gray" />
+            
+        </TableRow>
+        
+        <TableRow 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dialog_marker_usuario_row"
+            android:visibility="gone">
+            
+             <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Usuário"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:layout_gravity="right"
+                android:paddingRight="10dp" />
+             
+             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dialog_marker_usuario"
+                android:layout_weight="1"
+                android:text="euhauehauhea"
+                android:layout_gravity="left"
+                android:paddingLeft="10dp" />
+            
+        </TableRow>
+        
+        <TableRow 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dialog_marker_email_row"
+            android:visibility="gone" >
+            
+             <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:layout_gravity="right"
+                android:paddingRight="10dp" />
+             
+             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dialog_marker_email"
+                android:layout_weight="1"
+                android:text="euhauehauhea"
+                android:layout_gravity="left"
+                android:paddingLeft="10dp" />
+        </TableRow>
+    </TableLayout>
+    
+    <LinearLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal" >
+    	<Button 
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:text="Confirmar descarte"
+	        android:layout_weight="1"
+	        android:id="@+id/dialog_marker_confirmar_descarte"
+	        />
+    	<Button 
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:text="Traçar rota"
+	        android:layout_weight="1" />
+    </LinearLayout>
+
+</LinearLayout>
