@@ -6,7 +6,6 @@ from django.http import HttpResponse
 
 from usuario.models import Usuario
 from pontos.models import Ponto
-from pontos.models import Local
 from pontos.models import Tipo
 
 import json
@@ -36,33 +35,14 @@ def novo_ponto(request):
     ponto.descricao = dados['descricao']
     ponto.ponto_privado = dados['ponto_privado']
     ponto.usuario = usuario
+
     ponto.save()
 
+    for tipo in dados['tipos']:
+        tipo_banco = Tipo.objects.get(id=tipo['id'])
+        ponto.tipos.add(tipo_banco)
+
     return HttpResponse('Hello Novo Ponto')
-
-def novo_local(request):
-    #TRATAR DADOS VINDOS DO REQUEST.
-    dados = create_json_novo_local()
-
-    #Recupera a referencia do tipo no banco de dados.
-    try:
-        tipo = Tipo.objects.get(id=dados['tipo'])
-    except Tipo.DoesNotExist:
-        return HttpResponse('ERRO')    
-
-    #Recupera a referencia do ponto no banco de dados.
-    try:
-        ponto = Ponto.objects.get(id=dados['ponto'])
-    except Ponto.DoesNotExist:
-        return HttpResponse('ERRO')     
-
-    local = Local()
-    local.tipo = tipo
-    local.ponto = ponto
-    local.observacoes = dados['observacoes']
-    local.save()
-
-    return HttpResponse('Hello Novo Local') 
 
 '''
 Método que responde com um JSON com todos os Tipos de Descartes disponíveis.
@@ -101,6 +81,8 @@ def consulta_todos_pontos(request):
 
     return HttpResponse(json.dumps(response))
 
+#def consulta_pontos_proximos(request):
+    #pontos = Ponto.objects.all()
 
 def create_json_novo_ponto():
     dados_client = {
@@ -111,15 +93,7 @@ def create_json_novo_ponto():
         'nome' : 'Usuario 001',
         'id' : '1234567890',
         'url' : 'http://www.google.com',
-        'descricao' : 'descricao' }
+        'descricao' : 'descricao',
+        'tipos' : [{'id' : 1}, {'id' : 2}] }
 
     return dados_client
-
-def create_json_novo_local():
-    dados_local = {
-        'tipo' : 1,
-        'observacoes' : 'Observações',
-        'ponto' : 1
-    }
-
-    return dados_local

@@ -15,7 +15,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'novo_ponto/', views_pontos.novo_ponto),
-    url(r'novo_local/', views_pontos.novo_local),
     url(r'consulta_tipos/', views_pontos.consulta_todos_tipos),
     url(r'consulta_pontos/', views_pontos.consulta_todos_pontos),
 
