@@ -46,12 +46,7 @@ def processa_post_novo(request):
     ponto.usuario = usuario
     ponto.save()
     
-    dictTipos = dados['tipos'].split(',')
-    print dados['tipos']
-    print type(dados['tipos'])
-    print dictTipos
-    for tipo in dictTipos:
-        print tipo
+    for tipo in dados.getlist('tipos'):
         tipo_banco = Tipo.objects.get(id=int(tipo))
         ponto.tipos.add(tipo_banco)
 
