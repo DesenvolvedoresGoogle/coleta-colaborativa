@@ -35,7 +35,6 @@ def novo_ponto(request):
     ponto.latitude = dados['latitude']
     ponto.longitude = dados['longitude']
     ponto.descricao = dados['descricao']
-    ponto.ponto_privado = dados['ponto_privado']
     ponto.usuario = usuario
 
     #ponto.save()
@@ -191,7 +190,7 @@ def confirmar_descarte(request):
         'response' : 1
     }
 
-    return response
+    return HttpResponse(json.dumps(response))
 
 
 def create_json_novo_ponto():

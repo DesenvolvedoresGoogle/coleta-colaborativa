@@ -56,6 +56,7 @@ class Ponto(models.Model):
 
     def get_dicionario(self):
         retorno = {
+            'id' : str(self.id),
             'latitude' : str(self.latitude),
             'longitude' : str(self.longitude),
             'ponto_privado' : self.ponto_privado,
