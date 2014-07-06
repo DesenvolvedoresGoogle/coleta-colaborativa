@@ -152,6 +152,9 @@ public class MainActivity extends ActionBarActivity {
 				case 1:
 					mapFragment.initialize();
 					menuLayout.closeDrawer(Gravity.LEFT);
+					mapFragment.markersOnMap.clear();
+					mapFragment.markersOnMapId.clear();
+					Global.TIPOS.clear();
 					break;
 				default:
 					Toast.makeText(MainActivity.this, "Hue", Toast.LENGTH_SHORT).show();

@@ -1436,7 +1436,10 @@ containing a value of this type.
         public static final int marker_ico=0x7f020076;
         public static final int marker_insert_ico=0x7f020077;
         public static final int menu_ico=0x7f020078;
-        public static final int user_marker=0x7f020079;
+        public static final int search_btn_pressed=0x7f020079;
+        public static final int search_btn_standard=0x7f02007a;
+        public static final int search_button=0x7f02007b;
+        public static final int user_marker=0x7f02007c;
     }
     public static final class id {
         public static final int action_bar=0x7f05001f;
@@ -1460,14 +1463,14 @@ containing a value of this type.
         public static final int counter=0x7f05004f;
         public static final int default_activity_button=0x7f05002b;
         public static final int dialog=0x7f05000e;
-        public static final int dialog_marker_confirmar_descarte=0x7f050049;
-        public static final int dialog_marker_desc=0x7f050043;
-        public static final int dialog_marker_email=0x7f050048;
-        public static final int dialog_marker_email_row=0x7f050047;
-        public static final int dialog_marker_private=0x7f050044;
-        public static final int dialog_marker_tipos=0x7f050042;
-        public static final int dialog_marker_usuario=0x7f050046;
-        public static final int dialog_marker_usuario_row=0x7f050045;
+        public static final int dialog_marker=0x7f050042;
+        public static final int dialog_marker_desc=0x7f050044;
+        public static final int dialog_marker_email=0x7f050049;
+        public static final int dialog_marker_email_row=0x7f050048;
+        public static final int dialog_marker_private=0x7f050045;
+        public static final int dialog_marker_tipos=0x7f050043;
+        public static final int dialog_marker_usuario=0x7f050047;
+        public static final int dialog_marker_usuario_row=0x7f050046;
         public static final int dialog_novo_ponto=0x7f05004a;
         public static final int dialog_novo_ponto_descricao=0x7f05004b;
         public static final int dialog_novo_ponto_list=0x7f05004c;

@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:id="@+id/dialog_marker" >
     
     <TableLayout
         android:layout_width="match_parent"
@@ -22,7 +23,8 @@
                 android:textStyle="bold"
                 android:layout_weight="1"
                 android:layout_gravity="right"
-                android:paddingRight="10dp" />
+                android:paddingRight="10dp"
+                android:textColor="@color/black" />
             
             <TextView
                 android:layout_width="wrap_content"
@@ -31,7 +33,8 @@
                 android:layout_weight="1" 
                 android:text="euhauehauhea"
                 android:layout_gravity="left"
-                android:paddingLeft="10dp"/>
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
         </TableRow>
         
         <TableRow 
@@ -45,7 +48,8 @@
                 android:textStyle="bold"
                 android:layout_weight="1"
                 android:layout_gravity="right"
-                android:paddingRight="10dp" />
+                android:paddingRight="10dp"
+                android:textColor="@color/black" />
              
              <TextView
                 android:layout_width="wrap_content"
@@ -54,7 +58,8 @@
                 android:layout_weight="1"
                 android:text="euhauehauhea"
                 android:layout_gravity="left"
-                android:paddingLeft="10dp" />
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
             
         </TableRow>
         
@@ -88,7 +93,8 @@
                 android:textStyle="bold"
                 android:layout_weight="1"
                 android:layout_gravity="right"
-                android:paddingRight="10dp" />
+                android:paddingRight="10dp"
+                android:textColor="@color/black" />
              
              <TextView
                 android:layout_width="wrap_content"
@@ -97,7 +103,8 @@
                 android:layout_weight="1"
                 android:text="euhauehauhea"
                 android:layout_gravity="left"
-                android:paddingLeft="10dp" />
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
             
         </TableRow>
         
@@ -114,7 +121,8 @@
                 android:textStyle="bold"
                 android:layout_weight="1"
                 android:layout_gravity="right"
-                android:paddingRight="10dp" />
+                android:paddingRight="10dp" 
+                android:textColor="@color/black"/>
              
              <TextView
                 android:layout_width="wrap_content"
@@ -123,27 +131,9 @@
                 android:layout_weight="1"
                 android:text="euhauehauhea"
                 android:layout_gravity="left"
-                android:paddingLeft="10dp" />
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
         </TableRow>
     </TableLayout>
-    
-    <LinearLayout 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal" >
-    	<Button 
-	        android:layout_height="wrap_content"
-	        android:layout_width="wrap_content"
-	        android:text="Confirmar descarte"
-	        android:layout_weight="1"
-	        android:id="@+id/dialog_marker_confirmar_descarte"
-	        />
-    	<Button 
-	        android:layout_height="wrap_content"
-	        android:layout_width="wrap_content"
-	        android:text="Traçar rota"
-	        android:layout_weight="1" />
-    </LinearLayout>
 
 </LinearLayout>

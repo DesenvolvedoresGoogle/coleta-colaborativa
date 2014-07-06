@@ -12,11 +12,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -108,13 +110,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 				@Override
 				public void onInfoWindowClick(final Marker marker) {
 					if (!marker.equals(Global.myLocation) && !marker.equals(Global.newLocation)) {
-						Dialog dialog = new Dialog(getActivity());
-						dialog.setContentView(R.layout.dialog_marker);
-						dialog.setTitle("Ponto de coleta");
+						
+						AlertDialog alertDialog;
+						LayoutInflater inflater = LayoutInflater.from(context);
+						View dialog_layout = inflater.inflate(R.layout.dialog_marker, (ViewGroup) getActivity().findViewById(R.id.dialog_marker));
 						
 						final ColetaMarker m = markersOnMap.get(markersOnMapId.get(marker.getId()));
 						
-						TextView tiposTextView = (TextView) dialog.findViewById(R.id.dialog_marker_tipos);
+						TextView tiposTextView = (TextView) dialog_layout.findViewById(R.id.dialog_marker_tipos);
 						
 						String tiposString = "";
 						for (int i = 0; i < m.getTipos().size(); i++) {
@@ -125,30 +128,31 @@ import com.google.android.gms.maps.model.MarkerOptions;
 						
 						tiposTextView.setText(tiposString);
 						
-						TextView descricaoTextView = (TextView) dialog.findViewById(R.id.dialog_marker_desc);
+						TextView descricaoTextView = (TextView) dialog_layout.findViewById(R.id.dialog_marker_desc);
 						descricaoTextView.setText(m.getDescricao());
 						
 						if (m.isPrivado()) {
-							TableRow rowPrivado = (TableRow) dialog.findViewById(R.id.dialog_marker_private);
+							TableRow rowPrivado = (TableRow) dialog_layout.findViewById(R.id.dialog_marker_private);
 							rowPrivado.setVisibility(View.VISIBLE);
 							
-							TableRow rowUsuario = (TableRow) dialog.findViewById(R.id.dialog_marker_usuario_row);
+							TableRow rowUsuario = (TableRow) dialog_layout.findViewById(R.id.dialog_marker_usuario_row);
 							rowUsuario.setVisibility(View.VISIBLE);
 							
-							TableRow rowEmail = (TableRow) dialog.findViewById(R.id.dialog_marker_email_row);
+							TableRow rowEmail = (TableRow) dialog_layout.findViewById(R.id.dialog_marker_email_row);
 							rowEmail.setVisibility(View.VISIBLE);
 							
-							TextView usuarioTextView = (TextView) dialog.findViewById(R.id.dialog_marker_usuario);
+							TextView usuarioTextView = (TextView) dialog_layout.findViewById(R.id.dialog_marker_usuario);
 							usuarioTextView.setText(m.getNomeUsuario());
 							
-							TextView emailTextView = (TextView) dialog.findViewById(R.id.dialog_marker_email);
+							TextView emailTextView = (TextView) dialog_layout.findViewById(R.id.dialog_marker_email);
 							emailTextView.setText(m.getEmail());
 						}
 						
-						Button confirmarDescarte = (Button) dialog.findViewById(R.id.dialog_marker_confirmar_descarte);
-						confirmarDescarte.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
+						AlertDialog.Builder db = new AlertDialog.Builder(getActivity());
+						db.setTitle("Ponto de coleta");
+						
+						db.setPositiveButton("Confirmar descarte", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialogInterface, int which) {
 								final Dialog dialog = new Dialog(getActivity());
 								dialog.setContentView(R.layout.popup_tipos);
 								dialog.setTitle("Selecionar coleta");
@@ -167,7 +171,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 								listTipos.setOnItemClickListener(new OnItemClickListener() {
 									@Override
 									public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-										Toast.makeText(context, "Descartou item do tipo " + Global.TIPOS.get(position), Toast.LENGTH_SHORT).show();
 										new SendTipoDescartado().execute(new String[] { m.getTipos().get(position).getId(), m.getPontoId(), 
 												Global.myLocation.getPosition().latitude + "", Global.myLocation.getPosition().longitude + "" });
 										dialog.dismiss();
@@ -178,7 +181,21 @@ import com.google.android.gms.maps.model.MarkerOptions;
 							}
 						});
 						
-						dialog.show();
+						db.setNegativeButton("Traçar rota", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+					                    Uri.parse("http://maps.google.com/maps?saddr=" + Global.myLocation.getPosition().latitude + ","
+					                    + Global.myLocation.getPosition().longitude + "&daddr=" + marker.getPosition().latitude + "," 
+					                    + marker.getPosition().longitude + ""));
+								startActivity(intent);
+							}
+						});
+						
+						db.setView(dialog_layout);
+						
+						alertDialog = db.show();
+						
+						
 					} else if (marker.equals(Global.newLocation)) {
 						AlertDialog dialog;
 						LayoutInflater inflater = LayoutInflater.from(context);
@@ -280,6 +297,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
     	}
     	
     	public void initialize() {
+    		map.clear();
+    		addUserMarker();
     		new GetTiposEPontosIniciaisAsync().execute(Global.myLocation.getPosition().latitude + "", Global.myLocation.getPosition().longitude + "");
     	}
     	
@@ -398,6 +417,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
     		protected void onPostExecute(Integer result) {
     			if (result != 1)
     				Toast.makeText(context, "Ocorreu um erro ao conectar", Toast.LENGTH_SHORT).show();
+    			else if (result == 1) {
+    				Toast.makeText(context, "Descarte cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
+    			}
     		}
     	}
     	
