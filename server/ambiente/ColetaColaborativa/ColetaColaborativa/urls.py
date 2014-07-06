@@ -18,8 +18,10 @@ urlpatterns = patterns('',
     url(r'consulta_tipos/', views_pontos.consulta_todos_tipos),
     url(r'consulta_pontos/', views_pontos.consulta_todos_pontos),
     url(r'consulta_ponto_proximo_tipo/', views_pontos.consulta_pontos_proximos_tipos),
+    url(r'consulta_ponto_proximo/', views_pontos.consulta_pontos_proximos),
 
     url(r'^$', views_home.index),
 
-    url(r'view/pontos/', views_site.index)
+    url(r'view/pontos/', views_site.index),
+    url(r'view/no_mapa/', views_site.no_mapa)
 )

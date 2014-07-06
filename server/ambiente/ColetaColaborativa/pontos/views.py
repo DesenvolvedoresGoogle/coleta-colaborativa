@@ -110,11 +110,14 @@ def consulta_pontos_proximos_tipos(request):
                 melhor_distacia = distancia
                 melhor_ponto = ponto
 
+        tipo = Tipo.objects.get(id=id_tipo)
+
         estatistica = Estatistica()
         estatistica.ponto = ponto
         estatistica.latitude = latitude
         estatistica.longitude = longitude
         estatistica.tipo = 1
+        estatistica.tipo_descarte = tipo
         estatistica.save()
 
         response = {
@@ -132,6 +135,7 @@ def consulta_pontos_proximos_tipos(request):
 Método que retorna para a tela os pontos próximos do usuário.
 O limite de pontos para serem retornados é 50.
 '''
+@csrf_exempt
 def consulta_pontos_proximos(request):
     if request.method == 'POST':
         latitude = request.POST['latitude']
@@ -152,7 +156,7 @@ def consulta_pontos_proximos(request):
 
         response = {
             'response' : 1,
-            'ponto' : pontos
+            'pontos' : pontos_aptos
         }
 
     else:

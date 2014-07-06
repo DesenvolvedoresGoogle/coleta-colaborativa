@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Coleta Colaborativa</title>
+        <link rel="stylesheet" href="{{STATIC_URL}}css/index.css">
+        <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-theme.min.css">
+    </head>
+    <body>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">ColetaColaborativa</a>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a href="">Home</a></li>
+                            <li class="active"><a href="view/no_mapa/">Uso no Mapa</a></li>
+                            <li><a href="#">Estatística</a></li>
+                            <li><a href="view/pontos/">Novo Ponto</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <form method='POST'>
+                                <span id="signinButton">
+                                    <button class="g-signin"
+                                        data-scope="https://www.googleapis.com/auth/plus.login"
+                                        data-clientid="1054618264919-m26qm6qvk5cdh1o2pha90dnt2uosuda6.apps.googleusercontent.com"
+                                        data-callback="signinCallback"
+                                        data-theme="dark"
+                                        data-cookiepolicy="single_host_origin"
+                                        data-requestvisibleactions="http://schemas.google.com/AddActivity"
+                                        data-width="wide">
+                                    </button>
+                                </span>
+                            </form>
+                        </li>
+                        </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div id="mapa_coleta">
+        </div>
+    </body>
+
+
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBhp-XEVy9T9yaht07LCj6SdwaztO0tVmc&sensor=true"></script>
+    <script src='http://code.jquery.com/jquery-2.1.1.min.js'></script>
+    <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+    <script src="{{STATIC_URL}}js/login_api.js"></script>
+    <script>
+        $(document).ready( function() {
+            var pontoInicial = new google.maps.LatLng(-21.76249, -43.352834);
+            var pontoColeta;
+            var mapa;
+
+            var mapOptions = {
+                zoom: 17,
+                center: pontoInicial
+            };
+
+            mapa = new google.maps.Map(document.getElementById('mapa_coleta'), mapOptions);
+
+            {% for estatistica in estatisticas %}
+                var posicao = new google.maps.LatLng('{{ estatistica.latitude }}', '{{ estatistica.longitude }}');
+                
+                var infowindow = new google.maps.InfoWindow({
+                    content: 'FALA QUE É NOIS'
+                });
+
+                var marcador_ponto = new google.maps.Marker({
+                    map: mapa,
+                    draggable: false,
+                    animation: google.maps.Animation.DROP,
+                    position: posicao
+                });               
+
+                google.maps.event.addListener(marcador_ponto, 'click', function() {
+                    conteudo = '<b>Tipo de Descarte:</b>{{ estatistica.tipo.nome }}<br>';
+
+                    infowindow.setContent(conteudo);
+                    infowindow.open(mapa, this);
+                });
+            {% endfor %} 
+        });
+
+        function exibir_mensagem(id) {
+            alert(id);
+        }
+    </script>
+    <!-- Place this asynchronous JavaScript just before your </body> tag -->
+        <script type="text/javascript">
+            (function() {
+                var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                po.src = 'https://apis.google.com/js/client:plusone.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+            })();
+        </script>
+</html>

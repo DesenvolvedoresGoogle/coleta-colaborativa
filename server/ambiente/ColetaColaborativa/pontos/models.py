@@ -70,6 +70,8 @@ class Estatistica(models.Model):
     longitude = models.DecimalField('Longitude', max_digits=10, decimal_places=8)
     tipo = models.SmallIntegerField() #1 - Consulta / 2 - Descarte
 
+    tipo_descarte = models.ForeignKey(Tipo)
+
     class Meta:
         verbose_name = u'Estatísica'
         verbose_name_plural = u'Estatísicas'
