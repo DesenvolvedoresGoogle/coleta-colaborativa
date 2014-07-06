@@ -79,14 +79,40 @@
 
             {% for ponto in pontos %}
                 var posicao = new google.maps.LatLng('{{ ponto.latitude }}', '{{ ponto.longitude }}');
+                
+                var infowindow = new google.maps.InfoWindow({
+                    content: 'FALA QUE É NOIS'
+                });
+
                 var marcador_ponto = new google.maps.Marker({
                     map: mapa,
-                    draggable: true,
+                    draggable: false,
                     animation: google.maps.Animation.DROP,
                     position: posicao
+                });               
+
+                google.maps.event.addListener(marcador_ponto, 'click', function() {
+                    conteudo = '<b>Descrição:</b>{{ ponto.descricao }}<br>';
+                    tipos = ''
+                    {% for tipo in ponto.tipos.values %}
+                        tipos += '{{tipo.nome}} <br>'
+                    {% endfor %}
+                    conteudo += '<b>Tipos de Coletas:</b>' + tipos;
+
+                    {% if ponto.ponto_privado == True %}
+                        conteudo += '<br>Esse Ponto foi cadastrado como Privado.';
+                        conteudo += '<br>Email do responsável: {{ ponto.usuario.email }}';
+                    {% endif %}
+
+                    infowindow.setContent(conteudo);
+                    infowindow.open(mapa, this);
                 });
-            {% endfor %}
+            {% endfor %} 
         });
+
+        function exibir_mensagem(id) {
+            alert(id);
+        }
     </script>
 	<!-- Place this asynchronous JavaScript just before your </body> tag -->
     	<script type="text/javascript">

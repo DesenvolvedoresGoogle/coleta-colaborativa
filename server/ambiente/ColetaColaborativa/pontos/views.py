@@ -37,11 +37,11 @@ def novo_ponto(request):
     ponto.ponto_privado = dados['ponto_privado']
     ponto.usuario = usuario
 
-    ponto.save()
+    #ponto.save()
 
-    for tipo in dados['tipos']:
-        tipo_banco = Tipo.objects.get(id=tipo['id'])
-        ponto.tipos.add(tipo_banco)
+    #for tipo in dados['tipos']:
+    #    tipo_banco = Tipo.objects.get(id=tipo['id'])
+    #    ponto.tipos.add(tipo_banco)
 
     return HttpResponse('Hello Novo Ponto')
 
