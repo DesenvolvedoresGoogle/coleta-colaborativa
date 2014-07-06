@@ -21,14 +21,18 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -107,7 +111,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 						final ColetaMarker m = markersOnMap.get(markersOnMapId.get(marker.getId()));
 						
 						TextView tiposTextView = (TextView) dialog.findViewById(R.id.dialog_marker_tipos);
-						tiposTextView.setText(m.getTipos());
+						
+						String tiposString = "";
+						for (int i = 0; i < m.getTipos().size(); i++) {
+							tiposString += m.getTipos().get(i).getNome();
+							if (i !=  m.getTipos().size() - 1)
+								tiposString += ", ";
+						}
+						
+						tiposTextView.setText(tiposString);
 						
 						TextView descricaoTextView = (TextView) dialog.findViewById(R.id.dialog_marker_desc);
 						descricaoTextView.setText(m.getDescricao());
@@ -135,7 +147,32 @@ import com.google.android.gms.maps.model.MarkerOptions;
 						confirmarDescarte.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
-								Toast.makeText(context, m.getLatitude() + " - " + m.getLongitude() , Toast.LENGTH_SHORT).show();
+								final Dialog dialog = new Dialog(getActivity());
+								dialog.setContentView(R.layout.popup_tipos);
+								dialog.setTitle("Selecionar coleta");
+								WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+							    lp.copyFrom(dialog.getWindow().getAttributes());
+							    
+							    lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+							    lp.height = (int) (320 * getResources().getDisplayMetrics().density);;
+							    
+							    dialog.getWindow().setAttributes(lp);
+							    
+								ListView listTipos = (ListView) dialog.findViewById(R.id.popup_list_tipos);
+								ListTiposAdapter adapter = new ListTiposAdapter(context, m.getTipos());
+								listTipos.setAdapter(adapter);
+								
+								listTipos.setOnItemClickListener(new OnItemClickListener() {
+									@Override
+									public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+										Toast.makeText(context, "Descartou item do tipo " + Global.TIPOS.get(position), Toast.LENGTH_SHORT).show();
+										new SendTipoDescartado().execute(new String[] { m.getTipos().get(position).getId(), m.getPontoId(), 
+												Global.myLocation.getPosition().latitude + "", Global.myLocation.getPosition().longitude + "" });
+										dialog.dismiss();
+									}
+								});
+								
+								dialog.show();
 							}
 						});
 						
@@ -181,8 +218,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 			}
     	}
     	
+    	public void initialize() {
+    		new GetTiposEPontosIniciaisAsync().execute(Global.myLocation.getPosition().latitude + "", Global.myLocation.getPosition().longitude + "");
+    	}
+    	
     	// AsyncTask para pegar os tipos de descartes
-    	private class GetTiposEPontosIniciaisAsync extends AsyncTask<String, Void, Integer> {
+    	public class GetTiposEPontosIniciaisAsync extends AsyncTask<String, Void, Integer> {
     		
     		private JSONObject jsonPontos;
     		
@@ -226,12 +267,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
     				JSONArray pontos;
 					try {
 						pontos = jsonPontos.getJSONArray("pontos");
-		    	    
+
+						
+						markersOnMap.clear();
+						markersOnMapId.clear();
+						
 			    	    for (int i = 0; i < pontos.length(); i++) {
 			    	    	JSONArray tiposPonto = pontos.getJSONObject(i).getJSONArray("tipos");
 			    	    	String markerTitle = "";
+			    	    	ArrayList<ItemTipo> tiposArray = new ArrayList<ItemTipo>();
 							for (int j = 0; j < tiposPonto.length(); j++) {
 								markerTitle += tiposPonto.getJSONObject(j).getString("nome");
+								tiposArray.add(new ItemTipo(tiposPonto.getJSONObject(j).getString("id"), tiposPonto.getJSONObject(j).getString("nome")));
 								if (j != tiposPonto.length() - 1)
 									markerTitle += ", ";
 							}
@@ -240,15 +287,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 			    				.position(new LatLng(Double.parseDouble(pontos.getJSONObject(i).getString("latitude")), 
 			    						Double.parseDouble(pontos.getJSONObject(i).getString("longitude"))))
 			    				.title(markerTitle)
-			    				.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
+			    				.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_ico)));
 			    	    	
+							String pontoId = pontos.getJSONObject(i).getString("id");
 			    	    	String descricao = pontos.getJSONObject(i).getString("descricao");
 							boolean privado = pontos.getJSONObject(i).getBoolean("ponto_privado");
 							JSONObject usuario = pontos.getJSONObject(i).getJSONObject("usuario");
 							String nome = usuario.getString("nome");
 							String email = usuario.getString("email");
 							
-							markersOnMap.add(new ColetaMarker(markerTitle, descricao, privado, email, nome, marker.getPosition().latitude, marker.getPosition().longitude));
+							markersOnMap.add(new ColetaMarker(pontoId, tiposArray, descricao, privado, email, nome, marker.getPosition().latitude, marker.getPosition().longitude));
 							markersOnMapId.put(marker.getId(), i);
 			    	    }
 					} catch (JSONException e) {
@@ -257,6 +305,41 @@ import com.google.android.gms.maps.model.MarkerOptions;
 					}
     				
     			}
+    		}
+    	}
+    	
+    	// AsyncTask para confirmar descarte de tipo de coleta
+public class SendTipoDescartado extends AsyncTask<String, Void, Integer> {
+
+    		
+    		@Override
+    		protected Integer doInBackground (String... params) {
+    			ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+    		   
+    			if (networkInfo != null && networkInfo.isConnected()) {
+    		        try {
+    		        	URL url = new URL(Global.API_URL + "/confirmar_descarte/");
+    		    	    
+    		        	String urlParams = "tipo_id=" + params[0] + "&ponto_id=" + params[1] + "&latitude=" + params[2] + "&longitude=" + params[3];
+    		        	Log.d("PARAMS", urlParams);
+    		    	    JSONObject response = Global.HttpRequest(urlParams, url);
+   
+    		    	    
+    		    	    return response.getInt("response");
+    		        } catch (Exception e) {
+    		        	Log.e("GetTiposAsync", e.toString());
+    		        	return -1;
+    		        }
+    		    } else {
+    		    	return -3;
+    		    }
+    		}
+    		
+    		@Override
+    		protected void onPostExecute(Integer result) {
+    			if (result != 1)
+    				Toast.makeText(context, "Ocorreu um erro ao conectar", Toast.LENGTH_SHORT).show();
     		}
     	}
     	

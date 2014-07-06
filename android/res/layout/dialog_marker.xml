@@ -62,7 +62,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/dialog_marker_private"
-            android:visibility="gone" >
+            android:visibility="gone"
+            android:layout_marginTop="10dp" >
             
             <TextView 
                 android:layout_width="wrap_content"
