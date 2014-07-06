@@ -20,7 +20,11 @@ function loadProfile() {
 		});
 
 		request.execute(function(response) {
-			alert(response['displayName'] + '\n' + response['id'] + '\n' + response['url']);
+			//alert(response['displayName'] + '\n' + response['id'] + '\n' + response['url']);
+			//alert(JSON.stringify(response));
+			$('#id').val(response['id']);
+			$('#nome').val(response['displayName']);
+			$('#url').val(response['url']);
 		});
 	});
 }
