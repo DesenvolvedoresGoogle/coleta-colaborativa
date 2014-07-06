@@ -64,6 +64,9 @@ def novo_local(request):
 
     return HttpResponse('Hello Novo Local') 
 
+'''
+Método que responde com um JSON com todos os Tipos de Descartes disponíveis.
+'''
 @csrf_exempt
 def consulta_todos_tipos(request):
     tipos = Tipo.objects.all()
@@ -79,6 +82,10 @@ def consulta_todos_tipos(request):
 
     return HttpResponse(json.dumps(response))
 
+
+'''
+Método que responde com um JSON com todos os Pontos de Descartes disponíveis.
+'''
 @csrf_exempt
 def consulta_todos_pontos(request):
     pontos = Ponto.objects.all()

@@ -45,6 +45,18 @@ class Ponto(models.Model):
         return self.descricao[0:50] + '...'
 
     def get_dicionario(self):
+        lista_dicionarios_locais = []
+
+        try:
+            locais = Local.objects.filter(ponto__id=self.id)
+
+            if len(locais) > 0:
+                for local in locais.values():
+                    lista_dicionarios_locais.append(local)
+
+        except Local.DoesNotExist:
+            pass
+
         retorno = {
             'latitude' : str(self.latitude),
             'longitude' : str(self.longitude),
@@ -52,6 +64,9 @@ class Ponto(models.Model):
             'descricao' : self.descricao,
             'usuario' : self.usuario.get_dicionario()
         }
+
+        if len(lista_dicionarios_locais) != 0:
+            retorno['locais'] = lista_dicionarios_locais
 
         return retorno
 
@@ -73,3 +88,11 @@ class Local(models.Model):
 
     def __unicode__(self):
         return self.tipo
+
+    def get_dicionario(self):
+        retorno ={
+            'tipo' : self.tipo.nome,
+            'observacao' : self.observacao
+        }
+
+        return retorno
