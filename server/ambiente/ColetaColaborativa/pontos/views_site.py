@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from home import views as views_home
 
 from usuario.models import Usuario
 from pontos.models import Ponto
@@ -38,8 +39,9 @@ def processa_post_novo(request):
     ponto.latitude = dados['latitude']
     ponto.longitude = dados['longitude']
     ponto.descricao = dados['descricao']
-    ponto.ponto_privado = dados['ponto_privado']
+    if 'ponto_privado' in dados:
+        ponto.ponto_privado = dados['ponto_privado']
     ponto.usuario = usuario
     ponto.save()
 
-    return HttpResponse('Hello Novo Ponto')
+    return render(request, 'home/index.html', {})

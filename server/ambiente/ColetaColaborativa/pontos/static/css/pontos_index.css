@@ -1,0 +1,32 @@
+*,
+*:before,
+*:after {
+	padding: 0px;
+	margin: 0px;
+}
+
+html, 
+body {
+	height: 100%;
+	width: 100%;
+}
+
+div.container {
+	margin: 0px !important;
+	padding: 0px !important;
+	height: 100%;
+	width: 100%;
+}
+
+div#mapa_coleta {
+	width: 78%;
+	height: 100%;
+	margin-right: 2%;
+	float: left;
+}
+
+div#form_ponto {
+	width: 20%;
+	height: 100%;
+	float: right;
+}
