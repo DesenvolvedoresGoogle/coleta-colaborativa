@@ -60,3 +60,17 @@ class Ponto(models.Model):
             retorno['tipos'].append(tipo.get_dicionario())
         
         return retorno
+
+'''
+Model que mapeia as Estatisticas geradas pelo sistema.
+'''
+class Estatistica(models.Model):
+    ponto = models.ForeignKey(Ponto)
+    hora = models.DateTimeField(auto_now=True)
+    latitude = models.DecimalField('Latitude', max_digits=10, decimal_places=8)
+    longitude = models.DecimalField('Longitude', max_digits=10, decimal_places=8)
+    tipo = models.SmallIntegerField() #1 - Consulta / 2 - Descarte
+
+    class Meta:
+        verbose_name = u'Estatísica'
+        verbose_name_plural = u'Estatísicas'
