@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from usuario.models import Usuario
 from pontos.models import Ponto
 from pontos.models import Tipo
+from pontos.models import Estatistica
 
 import json
 import haversine
@@ -81,7 +82,10 @@ def consulta_todos_pontos(request):
     }
 
     return HttpResponse(json.dumps(response))
-
+'''
+Método que espera um POST com os dados da localização atual do usuário
+e procura no banco de dados o ponto mais próximo do usuário.
+'''
 @csrf_exempt
 def consulta_pontos_proximos_tipos(request):
     if request.method == 'POST':
@@ -106,6 +110,13 @@ def consulta_pontos_proximos_tipos(request):
                 melhor_distacia = distancia
                 melhor_ponto = ponto
 
+        estatistica = Estatistica()
+        estatistica.ponto = ponto
+        estatistica.latitude = latitude
+        estatistica.longitude = longitude
+        estatistica.tipo = 1
+        estatistica.save()
+
         response = {
             'response' : 1,
             'ponto' : ponto.get_dicionario()
@@ -116,6 +127,42 @@ def consulta_pontos_proximos_tipos(request):
             }
 
     return HttpResponse(json.dumps(response))
+
+'''
+Método que retorna para a tela os pontos próximos do usuário.
+O limite de pontos para serem retornados é 50.
+'''
+def consulta_pontos_proximos(request):
+    if request.method == 'POST':
+        latitude = request.POST['latitude']
+        longitude = request.POST['longitude']
+
+        pontos = Ponto.objects.all()
+        pontos_aptos = []
+        contador = 0
+        for ponto in pontos:
+            distancia = haversine.haversine(float(latitude), float(longitude), float(ponto.latitude), float(ponto.longitude))
+
+            if distancia < 3000:
+                pontos_aptos.append(ponto.get_dicionario())
+                contador = contador + 1
+
+            if contador == 50:
+                break
+
+        response = {
+            'response' : 1,
+            'ponto' : pontos
+        }
+
+    else:
+        response = {
+                'response' : -1,
+            }
+
+    return HttpResponse(json.dumps(response))
+
+
 
 
 def create_json_novo_ponto():
