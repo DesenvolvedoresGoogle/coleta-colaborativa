@@ -33,4 +33,4 @@ Lucas Soares do Amaral - [emai](mailto:lucassoamaral@gmail.com) - [github](https
 
 Thiago Dias da Silva - [emai](mailto:thiagodd.silva@gmail.com) - [github](https://github.com/thiagodds)
 
-João Rodrigo Menighin de Oliveira - [emai](mailto:joao.menighin@gmail.com) - [github](https://github.com/LucasSoaresAmaral)
+João Rodrigo Menighin de Oliveira - [emai](mailto:joao.menighin@gmail.com) - [github](https://github.com/Menighin)
